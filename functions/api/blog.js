@@ -4,7 +4,7 @@
 const SUBSTACK_FEED_URL = 'https://dreamthewilderness.substack.com/feed';
 
 export async function onRequestGet(context) {
-  const { request } = context;
+  const { request, env } = context;
 
   // CORS headers
   const corsHeaders = {
@@ -15,6 +15,32 @@ export async function onRequestGet(context) {
   };
 
   try {
+    // Try to get cached feed from KV (10-minute TTL)
+    const cacheKey = 'blog_feed_cache';
+    let items;
+    let cached = false;
+
+    if (env.BLOG_CACHE) {
+      try {
+        const cachedData = await env.BLOG_CACHE.get(cacheKey, 'json');
+        if (cachedData && cachedData.items) {
+          console.log('Blog API: Using cached feed');
+          items = cachedData.items;
+          cached = true;
+
+          return jsonResponse({
+            status: 'ok',
+            items: items,
+            count: items.length,
+            updatedAt: cachedData.updatedAt,
+            cached: true
+          }, 200, corsHeaders);
+        }
+      } catch (cacheError) {
+        console.warn('Blog API: Cache read failed, fetching fresh feed:', cacheError.message);
+      }
+    }
+
     // Fetch the Substack RSS feed
     const feedResponse = await fetch(SUBSTACK_FEED_URL);
 
@@ -25,14 +51,29 @@ export async function onRequestGet(context) {
     const feedText = await feedResponse.text();
 
     // Parse RSS XML
-    const items = parseRssFeed(feedText);
+    items = parseRssFeed(feedText);
+
+    // Cache the result for 10 minutes (600 seconds)
+    if (env.BLOG_CACHE && items.length > 0) {
+      try {
+        const updatedAt = new Date().toISOString();
+        await env.BLOG_CACHE.put(cacheKey, JSON.stringify({
+          items: items,
+          updatedAt: updatedAt
+        }), { expirationTtl: 600 });
+        console.log('Blog API: Feed cached for 10 minutes');
+      } catch (cacheError) {
+        console.warn('Blog API: Failed to cache feed:', cacheError.message);
+      }
+    }
 
     // Return as JSON
     return jsonResponse({
       status: 'ok',
       items: items,
       count: items.length,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      cached: false
     }, 200, corsHeaders);
 
   } catch (error) {

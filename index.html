@@ -33,10 +33,21 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://dreamthewilderness.com">
 
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    <link rel="preconnect" href="https://api.resend.com">
+    <link rel="dns-prefetch" href="https://api.resend.com">
+    <link rel="preconnect" href="https://dreamthewilderness.substack.com">
+    <link rel="dns-prefetch" href="https://dreamthewilderness.substack.com">
+
     <!-- Favicon & App Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='24' fill='%23d4c4a8'>🌙</text></svg>">
     <meta name="apple-mobile-web-app-title" content="Dream the Wilderness">
     <meta name="application-name" content="Dream the Wilderness">
+
+    <!-- Cloudflare Turnstile (CAPTCHA) -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -747,6 +758,11 @@
                     <label for="message" class="form-label">Message <span aria-label="required">*</span></label>
                     <textarea id="message" name="message" class="form-textarea" required aria-required="true" aria-describedby="message-help"></textarea>
                     <span id="message-help" class="form-help">Tell us about your inquiry or interest</span>
+                </div>
+
+                <!-- Cloudflare Turnstile CAPTCHA -->
+                <div class="form-group" style="display: flex; justify-content: center; transform: scale(0.9); transform-origin: 0 0;">
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAACb1WYg-6YEa8V3" data-theme="dark"></div>
                 </div>
 
                 <button type="submit" class="btn form-submit" id="submitBtn" aria-label="Send contact form">

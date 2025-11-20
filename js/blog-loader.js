@@ -4,18 +4,34 @@
  */
 
 /**
- * Fetch Substack posts from the /api/blog endpoint
+ * Fetch Substack posts from the /api/blog endpoint with timeout
  */
 async function loadSubstackPosts() {
+    const blogContainer = document.getElementById('blog-posts');
+
+    // Set timeout to clear skeleton loaders after 10 seconds
+    const timeoutId = setTimeout(() => {
+        const skeletonLoaders = blogContainer.querySelectorAll('.skeleton-loader');
+        if (skeletonLoaders.length > 0) {
+            console.warn('Blog loading timed out after 10 seconds');
+            showBlogError('Blog posts are taking longer than expected. Please try refreshing the page.');
+        }
+    }, 10000);
+
     try {
-        // Use your Cloudflare Worker endpoint
-        const response = await fetch('/api/blog');
+        // Use your Cloudflare Worker endpoint with fetch timeout
+        const controller = new AbortController();
+        const fetchTimeout = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+
+        const response = await fetch('/api/blog', { signal: controller.signal });
+        clearTimeout(fetchTimeout); // Clear fetch timeout on success
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
+        clearTimeout(timeoutId); // Clear loader timeout on success
 
         if (data.status === 'ok' && data.items && data.items.length > 0) {
             displayBlogPosts(data.items.slice(0, 3)); // Show latest 3 posts
@@ -23,8 +39,15 @@ async function loadSubstackPosts() {
             showBlogError('No posts found at this time');
         }
     } catch (error) {
+        clearTimeout(timeoutId); // Clear timeout on error
         console.error('Error loading Substack posts:', error);
-        showBlogError('Unable to load posts at this time');
+
+        // Provide more specific error messages
+        if (error.name === 'AbortError') {
+            showBlogError('Blog posts took too long to load. Please try again later.');
+        } else {
+            showBlogError('Unable to load posts at this time. Please check back later.');
+        }
     }
 }
 

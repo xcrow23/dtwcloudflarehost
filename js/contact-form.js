@@ -65,6 +65,13 @@ async function handleFormSubmit(event) {
         return;
     }
 
+    // Check Turnstile token
+    const turnstileToken = document.querySelector('[name="cf-turnstile-response"]');
+    if (!turnstileToken || !turnstileToken.value) {
+        showFormValidationError('Please complete the security verification');
+        return;
+    }
+
     const form = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
     const messageDiv = document.getElementById('formMessage');
@@ -77,10 +84,17 @@ async function handleFormSubmit(event) {
     try {
         const formData = new FormData(form);
 
+        // Add 10-second timeout to form submission
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
         const response = await fetch('/contact', {
             method: 'POST',
-            body: formData
+            body: formData,
+            signal: controller.signal
         });
+
+        clearTimeout(timeoutId); // Cancel timeout on response
 
         // Handle network errors
         if (!response.ok) {
@@ -107,7 +121,14 @@ async function handleFormSubmit(event) {
         }
     } catch (error) {
         console.error('Form submission error:', error);
-        messageDiv.innerHTML = 'Sorry, there was an error sending your message. Please try again or email hello@dreamthewilderness.com directly.';
+
+        // Provide specific error message for timeouts
+        if (error.name === 'AbortError') {
+            messageDiv.innerHTML = 'The request took too long. Please check your connection and try again.';
+        } else {
+            messageDiv.innerHTML = 'Sorry, there was an error sending your message. Please try again or email hello@dreamthewilderness.com directly.';
+        }
+
         messageDiv.classList.remove('success');
         messageDiv.classList.add('error');
     } finally {

@@ -1,12 +1,12 @@
 /**
  * Dream the Wilderness - Main Navigation & DOM Management
  * Handles section navigation, mobile menu, and page initialization
+ * Uses event delegation for better maintainability and performance
  */
 
 /**
  * Show a content section and hide others
  * @param {string} sectionName - ID of the section to show
- * @returns {boolean} false (for onclick handlers)
  */
 function showSection(sectionName) {
     // Hide all sections
@@ -22,19 +22,22 @@ function showSection(sectionName) {
     }
 
     // Update active nav link
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinks = document.querySelectorAll('[data-section]');
     navLinks.forEach(link => {
         link.classList.remove('active');
     });
 
     // Find and activate the corresponding nav link
-    const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+    const activeLink = document.querySelector(`[data-section="${sectionName}"]`);
     if (activeLink) {
         activeLink.classList.add('active');
     }
 
     // Close mobile menu if open
-    document.getElementById('navLinks').classList.remove('active');
+    const navLinksContainer = document.getElementById('navLinks');
+    if (navLinksContainer) {
+        navLinksContainer.classList.remove('active');
+    }
 
     // Update URL hash for browser history and shareable links
     window.history.pushState(
@@ -45,17 +48,42 @@ function showSection(sectionName) {
 
     // Scroll to top
     window.scrollTo(0, 0);
-
-    // Prevent default link behavior
-    return false;
 }
 
 /**
- * Toggle mobile menu visibility
+ * Setup navigation link delegation
+ * Handles clicks on all links with data-section attribute
  */
-function toggleMobileMenu() {
-    const navLinks = document.getElementById('navLinks');
-    navLinks.classList.toggle('active');
+function setupNavigationDelegation() {
+    document.addEventListener('click', function(event) {
+        // Check if clicked element or its parent has data-section attribute
+        let target = event.target;
+        while (target && target !== document) {
+            if (target.hasAttribute('data-section')) {
+                event.preventDefault();
+                const sectionName = target.getAttribute('data-section');
+                showSection(sectionName);
+                return;
+            }
+            target = target.parentElement;
+        }
+    });
+}
+
+/**
+ * Setup mobile menu toggle delegation
+ */
+function setupMobileMenuToggle() {
+    const toggleBtn = document.querySelector('.mobile-menu-toggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+            // Update aria-expanded attribute for accessibility
+            const isExpanded = navLinks.classList.contains('active');
+            toggleBtn.setAttribute('aria-expanded', isExpanded);
+        });
+    }
 }
 
 /**
@@ -68,6 +96,10 @@ function setupMobileMenuClickHandler() {
 
         if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
             navLinks.classList.remove('active');
+            const toggleBtn = document.querySelector('.mobile-menu-toggle');
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-expanded', 'false');
+            }
         }
     });
 }
@@ -88,6 +120,8 @@ function setupPopstateHandler() {
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Setup event handlers first
+    setupNavigationDelegation();
+    setupMobileMenuToggle();
     setupMobileMenuClickHandler();
     setupPopstateHandler();
 
@@ -107,12 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Update nav link highlight for initial section
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinks = document.querySelectorAll('[data-section]');
     navLinks.forEach(link => {
         link.classList.remove('active');
     });
 
-    const activeLink = document.querySelector(`[onclick="showSection('${initialSection}')"]`);
+    const activeLink = document.querySelector(`[data-section="${initialSection}"]`);
     if (activeLink) {
         activeLink.classList.add('active');
     }

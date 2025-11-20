@@ -1,6 +1,7 @@
 /**
  * Dream the Wilderness - Contact Form Handler
  * Manages contact form submission and response handling
+ * Uses event delegation for form submission handling
  */
 
 /**
@@ -51,6 +52,16 @@ function showFormValidationError(message) {
     messageDiv.innerHTML = message;
     messageDiv.classList.remove('success');
     messageDiv.classList.add('error');
+}
+
+/**
+ * Setup contact form submission handler using event delegation
+ */
+function setupContactFormHandler() {
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    }
 }
 
 /**
@@ -137,3 +148,10 @@ async function handleFormSubmit(event) {
         submitBtn.disabled = false;
     }
 }
+
+/**
+ * Initialize contact form handlers on DOM ready
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    setupContactFormHandler();
+});

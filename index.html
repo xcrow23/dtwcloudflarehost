@@ -570,14 +570,14 @@
     <header role="banner">
         <nav class="container" aria-label="Main navigation">
             <div class="logo">Dream the Wilderness</div>
-            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
             <ul class="nav-links" id="navLinks" role="menubar">
-                <li role="none"><a href="#" onclick="showSection('home')" class="nav-link active" role="menuitem">Home</a></li>
-                <li role="none"><a href="#" onclick="showSection('astrology')" class="nav-link" role="menuitem">Celestial Guidance</a></li>
-                <li role="none"><a href="#" onclick="showSection('craft')" class="nav-link" role="menuitem">Sacred Craft</a></li>
-                <li role="none"><a href="#" onclick="showSection('blog')" class="nav-link" role="menuitem">Blog</a></li>
-                <li role="none"><a href="#" onclick="showSection('about')" class="nav-link" role="menuitem">About</a></li>
-                <li role="none"><a href="#" onclick="showSection('contact')" class="nav-link" role="menuitem">Contact</a></li>
+                <li role="none"><a href="#home" data-section="home" class="nav-link active" role="menuitem">Home</a></li>
+                <li role="none"><a href="#astrology" data-section="astrology" class="nav-link" role="menuitem">Celestial Guidance</a></li>
+                <li role="none"><a href="#craft" data-section="craft" class="nav-link" role="menuitem">Sacred Craft</a></li>
+                <li role="none"><a href="#blog" data-section="blog" class="nav-link" role="menuitem">Blog</a></li>
+                <li role="none"><a href="#about" data-section="about" class="nav-link" role="menuitem">About</a></li>
+                <li role="none"><a href="#contact" data-section="contact" class="nav-link" role="menuitem">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -595,14 +595,14 @@
                     <img src="/images/astrology-landing.jpg" alt="Experienced Guidance From the Stars">
                     <h3>Celestial Guidance</h3>
                     <p>Journey through the constellations and planetary wisdom. Discover the cosmic threads that weave through your story and illuminate your path forward.</p>
-                    <a href="#" onclick="showSection('astrology')" class="btn">Explore Astrology</a>
+                    <a href="#astrology" data-section="astrology" class="btn">Explore Astrology</a>
                 </div>
 
                 <div class="service-card">
                     <img src="/images/fiber-arts-landing.jpg" alt="Fibre arts with threads and textiles">
                     <h3>Fibre Wild</h3>
                     <p>Explore the animate world of fiber and thread, where each stitch holds intention and every pattern tells a story of connection between hand, heart, and earth.</p>
-                    <a href="#" onclick="showSection('craft')" class="btn">Discover Crafts</a>
+                    <a href="#craft" data-section="craft" class="btn">Discover Crafts</a>
                 </div>
         </section>
 
@@ -645,21 +645,21 @@
                     <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=300&fit=crop&q=80" alt="Handwoven textiles" loading="lazy">
                     <h3>Intuitive Weaving</h3>
                     <p>Create sacred textiles that hold intention and connect you to the rhythm of the loom.</p>
-                    <a href="#" onclick="showSection('contact')" class="btn">Join Workshop</a>
+                    <a href="#contact" data-section="contact" class="btn">Join Workshop</a>
                 </div>
 
                 <div class="service-card">
                     <img src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=600&h=300&fit=crop&q=80" alt="Natural dyeing process" loading="lazy">
                     <h3>Plant Dye Alchemy</h3>
                     <p>Transform fibers with the magic of plant medicine, creating colors that carry earth's essence.</p>
-                    <a href="#" onclick="showSection('contact')" class="btn">Explore Dyes</a>
+                    <a href="#contact" data-section="contact" class="btn">Explore Dyes</a>
                 </div>
 
                 <div class="service-card">
                     <img src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600&h=300&fit=crop&q=80" alt="Fiber spinning" loading="lazy">
                     <h3>Sacred Spinning</h3>
                     <p>Spin your own yarn while connecting to the ancient art of transforming fleece into thread.</p>
-                    <a href="#" onclick="showSection('contact')" class="btn">Learn to Spin</a>
+                    <a href="#contact" data-section="contact" class="btn">Learn to Spin</a>
                 </div>
             </div>
         </section>
@@ -724,7 +724,7 @@
         <p>Whether you're seeking celestial guidance or wanting to explore sacred crafts, I'd love to connect with you.</p>
 
         <!-- Contact Form -->
-        <form id="contactForm" style="margin-top: 2rem;" onsubmit="handleFormSubmit(event)" novalidate>
+        <form id="contactForm" style="margin-top: 2rem;" novalidate>
             <fieldset>
                 <legend class="sr-only">Contact Form</legend>
 

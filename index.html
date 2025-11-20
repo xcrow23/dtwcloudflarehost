@@ -141,6 +141,11 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -354,9 +359,20 @@
             </div>
 
             <div id="blog-posts" class="services-grid">
-                <div class="service-card" style="text-align: center;">
-                    <h3>Loading latest posts...</h3>
-                    <p>Connecting to the wilderness journal...</p>
+                <div class="service-card" style="text-align: center; opacity: 0.6;">
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 200px; border-radius: 10px; margin-bottom: 1rem;"></div>
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 1.5rem; border-radius: 8px; margin-bottom: 0.5rem;"></div>
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 4rem; border-radius: 8px; margin-bottom: 1rem;"></div>
+                </div>
+                <div class="service-card" style="text-align: center; opacity: 0.6;">
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 200px; border-radius: 10px; margin-bottom: 1rem;"></div>
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 1.5rem; border-radius: 8px; margin-bottom: 0.5rem;"></div>
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 4rem; border-radius: 8px; margin-bottom: 1rem;"></div>
+                </div>
+                <div class="service-card" style="text-align: center; opacity: 0.6;">
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 200px; border-radius: 10px; margin-bottom: 1rem;"></div>
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 1.5rem; border-radius: 8px; margin-bottom: 0.5rem;"></div>
+                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 4rem; border-radius: 8px; margin-bottom: 1rem;"></div>
                 </div>
             </div>
             

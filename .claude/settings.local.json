@@ -3,7 +3,9 @@
     "allow": [
       "Bash(find:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Dream the Wilderness website setup\n\n- Initialize git repository with Cloudflare Pages deployment\n- Add CLAUDE.md with project architecture and guidelines\n- Implement /api/blog Cloudflare Worker for Substack RSS integration\n- Enhance blog post preview cards with featured images and better formatting\n- Add .gitignore for environment and build artifacts\n- Configure Cloudflare headers for security and caching\n- Configure Cloudflare redirects for SEO-friendly routing\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nPhase 1 Complete: Blog endpoint and enhanced preview cards\n\n- Implement /api/blog Cloudflare Worker with RSS parsing\n- Add blog post preview cards with featured images\n- Implement skeleton loading animation with shimmer effect\n- Add HTML escaping for security in blog display\n- Enhanced image handling with lazy loading\n- Better date formatting and excerpt display\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

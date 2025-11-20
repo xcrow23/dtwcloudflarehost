@@ -222,6 +222,159 @@
             cursor: pointer;
         }
 
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #d4c4a8;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #333;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #8b755d;
+            box-shadow: 0 0 0 3px rgba(139, 117, 93, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-submit {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .form-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .form-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .form-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        /* Contact Card Special Styling */
+        .contact-card {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            text-align: left;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #b8a082;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+            color: #b8a082;
+        }
+
+        .contact-info strong {
+            color: #d4c4a8;
+        }
+
+        /* About/Content Card */
+        .content-card {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-card p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .content-card p + p {
+            margin-top: 1.5rem;
+        }
+
+        /* Skeleton Loading */
+        .skeleton-loader {
+            opacity: 0.6;
+        }
+
+        .skeleton-line {
+            background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .skeleton-image {
+            height: 200px;
+        }
+
+        .skeleton-title {
+            height: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .skeleton-text {
+            height: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Blog Post Styling */
+        .blog-post-image {
+            object-fit: cover;
+        }
+
+        .blog-post-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+            color: #d4c4a8;
+        }
+
+        .blog-post-date {
+            font-size: 0.9rem;
+            color: #8b755d;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .blog-post-excerpt {
+            text-align: left;
+            line-height: 1.6;
+            color: #b8a082;
+            margin-bottom: 1rem;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -359,20 +512,20 @@
             </div>
 
             <div id="blog-posts" class="services-grid">
-                <div class="service-card" style="text-align: center; opacity: 0.6;">
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 200px; border-radius: 10px; margin-bottom: 1rem;"></div>
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 1.5rem; border-radius: 8px; margin-bottom: 0.5rem;"></div>
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 4rem; border-radius: 8px; margin-bottom: 1rem;"></div>
+                <div class="service-card skeleton-loader">
+                    <div class="skeleton-line skeleton-image"></div>
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-text"></div>
                 </div>
-                <div class="service-card" style="text-align: center; opacity: 0.6;">
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 200px; border-radius: 10px; margin-bottom: 1rem;"></div>
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 1.5rem; border-radius: 8px; margin-bottom: 0.5rem;"></div>
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 4rem; border-radius: 8px; margin-bottom: 1rem;"></div>
+                <div class="service-card skeleton-loader">
+                    <div class="skeleton-line skeleton-image"></div>
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-text"></div>
                 </div>
-                <div class="service-card" style="text-align: center; opacity: 0.6;">
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 200px; border-radius: 10px; margin-bottom: 1rem;"></div>
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 1.5rem; border-radius: 8px; margin-bottom: 0.5rem;"></div>
-                    <div style="background: linear-gradient(90deg, #ddd 25%, #eee 50%, #ddd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 4rem; border-radius: 8px; margin-bottom: 1rem;"></div>
+                <div class="service-card skeleton-loader">
+                    <div class="skeleton-line skeleton-image"></div>
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-text"></div>
                 </div>
             </div>
             
@@ -390,7 +543,7 @@
                 <p>The story behind Dream the Wilderness</p>
             </div>
 
-            <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+            <div class="service-card content-card">
                 <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=200&fit=crop" alt="Forest wilderness scene">
                 <h3>Where Cosmos Meets Craft</h3>
                 <p>Dream the Wilderness emerged from a deep calling to bridge the ancient wisdom of the stars with the tactile magic of fiber arts. In this sacred space, we honor both the cosmic rhythms that guide us and the earthly materials that ground us.</p>
@@ -405,29 +558,26 @@
         <p>Ready to begin your journey?</p>
     </div>
 
-    <div class="service-card" style="max-width: 600px; margin: 0 auto;">
+    <div class="service-card contact-card">
         <img src="https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=400&h=200&fit=crop" alt="Contact and communication">
         <h3>Get in Touch</h3>
         <p>Whether you're seeking celestial guidance or wanting to explore sacred crafts, I'd love to connect with you.</p>
-        
+
         <!-- Contact Form -->
-        <form id="contactForm" style="text-align: left; margin-top: 2rem;" onsubmit="handleFormSubmit(event)">
-            <div style="margin-bottom: 1rem;">
-                <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Name *</label>
-                <input type="text" id="name" name="name" required 
-                       style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+        <form id="contactForm" style="margin-top: 2rem;" onsubmit="handleFormSubmit(event)">
+            <div class="form-group">
+                <label for="name" class="form-label">Name *</label>
+                <input type="text" id="name" name="name" class="form-input" required>
             </div>
-            
-            <div style="margin-bottom: 1rem;">
-                <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Email *</label>
-                <input type="email" id="email" name="email" required 
-                       style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email *</label>
+                <input type="email" id="email" name="email" class="form-input" required>
             </div>
-            
-            <div style="margin-bottom: 1rem;">
-                <label for="service" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Service Interest</label>
-                <select id="service" name="service" 
-                        style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+
+            <div class="form-group">
+                <label for="service" class="form-label">Service Interest</label>
+                <select id="service" name="service" class="form-select">
                     <option value="General Inquiry">General Inquiry</option>
                     <option value="Birth Chart Reading">Birth Chart Reading</option>
                     <option value="Lunar Guidance">Lunar Guidance</option>
@@ -437,23 +587,22 @@
                     <option value="Spinning Workshop">Spinning Workshop</option>
                 </select>
             </div>
-            
-            <div style="margin-bottom: 1rem;">
-                <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Message *</label>
-                <textarea id="message" name="message" rows="5" required 
-                          style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; resize: vertical;"></textarea>
+
+            <div class="form-group">
+                <label for="message" class="form-label">Message *</label>
+                <textarea id="message" name="message" class="form-textarea" required></textarea>
             </div>
-            
-            <button type="submit" class="btn" id="submitBtn" style="width: 100%; margin-top: 1rem;">
+
+            <button type="submit" class="btn form-submit" id="submitBtn">
                 Send Message
             </button>
         </form>
-        
+
         <!-- Form Status Message -->
-        <div id="formMessage" style="margin-top: 1rem; padding: 1rem; border-radius: 8px; display: none;"></div>
-        
+        <div id="formMessage" class="form-message"></div>
+
         <!-- Alternative Contact Info -->
-        <div style="text-align: left; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+        <div class="contact-info">
             <p><strong>Direct Email:</strong> hello@dreamthewilderness.com</p>
             <p><strong>Sessions:</strong> Available by appointment</p>
             <p><strong>Workshops:</strong> Seasonal offerings announced via newsletter</p>
@@ -488,28 +637,22 @@ async function handleFormSubmit(event) {
         if (result.success) {
             // Success message
             messageDiv.innerHTML = result.message;
-            messageDiv.style.backgroundColor = '#d4edda';
-            messageDiv.style.color = '#155724';
-            messageDiv.style.border = '1px solid #c3e6cb';
-            messageDiv.style.display = 'block';
-            
+            messageDiv.classList.remove('error');
+            messageDiv.classList.add('success');
+
             // Reset form
             form.reset();
         } else {
             // Error message
             messageDiv.innerHTML = result.error;
-            messageDiv.style.backgroundColor = '#f8d7da';
-            messageDiv.style.color = '#721c24';
-            messageDiv.style.border = '1px solid #f5c6cb';
-            messageDiv.style.display = 'block';
+            messageDiv.classList.remove('success');
+            messageDiv.classList.add('error');
         }
     } catch (error) {
         console.error('Form submission error:', error);
         messageDiv.innerHTML = 'Sorry, there was an error sending your message. Please try again or email directly.';
-        messageDiv.style.backgroundColor = '#f8d7da';
-        messageDiv.style.color = '#721c24';
-        messageDiv.style.border = '1px solid #f5c6cb';
-        messageDiv.style.display = 'block';
+        messageDiv.classList.remove('success');
+        messageDiv.classList.add('error');
     } finally {
         // Reset button
         submitBtn.textContent = 'Send Message';
@@ -624,11 +767,11 @@ async function handleFormSubmit(event) {
                 const description = post.description || 'Read more on Substack...';
 
                 return `
-                    <div class="service-card">
-                        <img src="${imageUrl}" alt="${escapeHtml(post.title)}" loading="lazy" style="object-fit: cover;">
-                        <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; margin-top: 1rem;">${escapeHtml(post.title)}</h3>
-                        <p style="font-size: 0.9rem; color: #8b755d; font-style: italic; margin-bottom: 1rem;">${date}</p>
-                        <p style="text-align: left; line-height: 1.6; color: #b8a082; margin-bottom: 1rem;">${escapeHtml(description)}</p>
+                    <div class="service-card blog-post">
+                        <img src="${imageUrl}" alt="${escapeHtml(post.title)}" loading="lazy" class="blog-post-image">
+                        <h3 class="blog-post-title">${escapeHtml(post.title)}</h3>
+                        <p class="blog-post-date">${date}</p>
+                        <p class="blog-post-excerpt">${escapeHtml(description)}</p>
                         <a href="${post.link}" target="_blank" rel="noopener noreferrer" class="btn">Read Full Post</a>
                     </div>
                 `;
@@ -644,11 +787,11 @@ async function handleFormSubmit(event) {
         function showBlogError(message) {
             const blogContainer = document.getElementById('blog-posts');
             blogContainer.innerHTML = `
-                <div class="service-card">
+                <div class="service-card content-card">
                     <h3>Wilderness Journal</h3>
                     <p>${message}</p>
                     <p style="margin-top: 1rem;">Visit the full blog for the latest reflections and insights.</p>
-                    <a href="https://dreamthewilderness.substack.com" target="_blank" class="btn">Visit Substack</a>
+                    <a href="https://dreamthewilderness.substack.com" target="_blank" rel="noopener noreferrer" class="btn">Visit Substack</a>
                 </div>
             `;
         }

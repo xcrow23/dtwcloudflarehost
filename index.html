@@ -121,13 +121,15 @@
 
         /* Header & Navigation */
         header {
-            background: rgba(31, 20, 12, 0.9);
+            background: rgba(31, 20, 12, 0.95);
             color: #e8dcc0;
             padding: 1rem 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            /* Backdrop filter with vendor prefix for better browser support */
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             border-bottom: 2px solid rgba(139, 117, 93, 0.3);
         }
@@ -193,9 +195,11 @@
         .hero {
             text-align: center;
             padding: 4rem 0;
-            background: rgba(139, 117, 93, 0.15);
+            background: rgba(139, 117, 93, 0.2);
             border-radius: 15px;
             margin-bottom: 3rem;
+            /* Backdrop filter with vendor prefix and fallback opacity */
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(139, 117, 93, 0.2);
             position: relative;
@@ -551,6 +555,17 @@
             line-height: 1.6;
             color: #b8a082;
             margin-bottom: 1rem;
+        }
+
+        /* Fallback for browsers without backdrop-filter support (e.g., older Firefox) */
+        @supports not (backdrop-filter: blur(10px)) {
+            header {
+                background: rgba(31, 20, 12, 0.98);
+            }
+
+            .hero {
+                background: rgba(139, 117, 93, 0.35);
+            }
         }
 
         @media (max-width: 768px) {

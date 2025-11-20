@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream the Wilderness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #e8dcc0;
+            background: linear-gradient(135deg, #3d2914 0%, #2c1810 50%, #1a0f08 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle temple sanctuary texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(139, 117, 93, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(88, 73, 56, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(31, 20, 12, 0.9);
+            color: #e8dcc0;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(139, 117, 93, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: #d4c4a8;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #b8a082;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #d4c4a8;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: rgba(139, 117, 93, 0.15);
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(139, 117, 93, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #d4c4a8;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #b8a082;
+            max-width: 600px;
+            margin: 0 auto;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .service-card {
+            background: rgba(139, 117, 93, 0.15);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            border: 2px solid rgba(139, 117, 93, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139, 117, 93, 0.5);
+            background: rgba(139, 117, 93, 0.25);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(139, 117, 93, 0.3);
+        }
+
+        .service-card h3 {
+            color: #d4c4a8;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            font-size: 1.6rem;
+        }
+
+        .service-card p {
+            color: #b8a082;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #8b755d, #6b5940);
+            color: #f5f1e8;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #9d8469, #7a6249);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #d4c4a8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(31, 20, 12, 0.98);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Dream the Wilderness</div>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="showSection('home')" class="nav-link active">Home</a></li>
+                <li><a href="#" onclick="showSection('astrology')" class="nav-link">Celestial Guidance</a></li>
+                <li><a href="#" onclick="showSection('craft')" class="nav-link">Sacred Craft</a></li>
+                <li><a href="#" onclick="showSection('blog')" class="nav-link">Blog</a></li>
+                <li><a href="#" onclick="showSection('about')" class="nav-link">About</a></li>
+                <li><a href="#" onclick="showSection('contact')" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Home Section -->
+        <section id="home" class="content-section active">
+            <div class="hero">
+                <h1>What are you dreaming of?</h1>
+                <p>Step into the sacred grove where animacy, astrology, and imagination converge. Here, in this liminal space between earth and sky, ancient wisdom meets creative expression.</p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <img src="/images/astrology-landing.jpg" alt="Experienced Guidance From the Stars">
+                    <h3>Celestial Guidance</h3>
+                    <p>Journey through the constellations and planetary wisdom. Discover the cosmic threads that weave through your story and illuminate your path forward.</p>
+                    <a href="#" onclick="showSection('astrology')" class="btn">Explore Astrology</a>
+                </div>
+
+                <div class="service-card">
+                    <img src="/images/fiber-arts-landing.jpg" alt="Fibre arts with threads and textiles">
+                    <h3>Fibre Wild</h3>
+                    <p>Explore the animate world of fiber and thread, where each stitch holds intention and every pattern tells a story of connection between hand, heart, and earth.</p>
+                    <a href="#" onclick="showSection('craft')" class="btn">Discover Crafts</a>
+                </div>
+        </section>
+
+        <!-- Astrology Section -->
+<section id="astrology" class="content-section">
+    <div class="hero">
+        <h1>Celestial Guidance</h1>
+        <p>Connect with the wisdom of the stars and planets to illuminate your path</p>
+    </div>
+
+    <div class="services-grid">
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=400&h=200&fit=crop" alt="Birth chart reading" loading="lazy">
+            <h3>Birth Chart Readings</h3>
+            <p>Dive deep into your cosmic blueprint and discover the unique energies that shape your journey.</p>
+            <a href="https://dreamthewilderness.substack.com/p/book-an-astrology-reading" target="_blank" class="btn">Book Reading</a>
+        </div>
+
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop" alt="Traditional astrology guide book">
+            <h3>Quick Guide to Traditional Astrology</h3>
+            <div style="background: #8b755d; color: #f5f1e8; padding: 0.5rem; border-radius: 8px; margin: 1rem 0; font-weight: bold; font-size: 0.9rem; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                FREE PDF DOWNLOAD
+            </div>
+            <p>A comprehensive quick reference guide covering planetary symbols, zodiac signs, elements, and essential concepts for reading astrological charts according to ancient wisdom traditions.</p>
+            <a href="/downloads/quick-guide-traditional-astrology.pdf" class="btn" target="_blank">Download Free Guide</a>
+        </div>
+    </div>
+</section>
+
+        <!-- Sacred Craft Section -->
+        <section id="craft" class="content-section">
+            <div class="hero">
+                <h1>Sacred Craft</h1>
+                <p>Where fiber, intention, and earth wisdom intertwine</p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=200&fit=crop" alt="Handwoven textiles">
+                    <h3>Intuitive Weaving</h3>
+                    <p>Create sacred textiles that hold intention and connect you to the rhythm of the loom.</p>
+                    <a href="#" onclick="showSection('contact')" class="btn">Join Workshop</a>
+                </div>
+
+                <div class="service-card">
+                    <img src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=400&h=200&fit=crop" alt="Natural dyeing process">
+                    <h3>Plant Dye Alchemy</h3>
+                    <p>Transform fibers with the magic of plant medicine, creating colors that carry earth's essence.</p>
+                    <a href="#" onclick="showSection('contact')" class="btn">Explore Dyes</a>
+                </div>
+
+                <div class="service-card">
+                    <img src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=400&h=200&fit=crop" alt="Fiber spinning">
+                    <h3>Sacred Spinning</h3>
+                    <p>Spin your own yarn while connecting to the ancient art of transforming fleece into thread.</p>
+                    <a href="#" onclick="showSection('contact')" class="btn">Learn to Spin</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Section with Substack Feed -->
+        <section id="blog" class="content-section">
+            <div class="hero">
+                <h1>Wilderness Reflections</h1>
+                <p>Thoughts, musings, and wisdom from the borderlands between earth and sky</p>
+            </div>
+
+            <div id="blog-posts" class="services-grid">
+                <div class="service-card" style="text-align: center;">
+                    <h3>Loading latest posts...</h3>
+                    <p>Connecting to the wilderness journal...</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://dreamthewilderness.substack.com" target="_blank" class="btn">
+                    Visit Full Blog on Substack
+                </a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="content-section">
+            <div class="hero">
+                <h1>About</h1>
+                <p>The story behind Dream the Wilderness</p>
+            </div>
+
+            <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=200&fit=crop" alt="Forest wilderness scene">
+                <h3>Where Cosmos Meets Craft</h3>
+                <p>Dream the Wilderness emerged from a deep calling to bridge the ancient wisdom of the stars with the tactile magic of fiber arts. In this sacred space, we honor both the cosmic rhythms that guide us and the earthly materials that ground us.</p>
+                <p>Through astrology, we read the language of the stars. Through craft, we speak with our hands. Together, they weave a complete practice of living in harmony with both celestial and terrestrial wisdom.</p>
+            </div>
+        </section>
+
+<!-- Contact Section with Working Form -->
+<section id="contact" class="content-section">
+    <div class="hero">
+        <h1>Connect</h1>
+        <p>Ready to begin your journey?</p>
+    </div>
+
+    <div class="service-card" style="max-width: 600px; margin: 0 auto;">
+        <img src="https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=400&h=200&fit=crop" alt="Contact and communication">
+        <h3>Get in Touch</h3>
+        <p>Whether you're seeking celestial guidance or wanting to explore sacred crafts, I'd love to connect with you.</p>
+        
+        <!-- Contact Form -->
+        <form id="contactForm" style="text-align: left; margin-top: 2rem;" onsubmit="handleFormSubmit(event)">
+            <div style="margin-bottom: 1rem;">
+                <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Name *</label>
+                <input type="text" id="name" name="name" required 
+                       style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Email *</label>
+                <input type="email" id="email" name="email" required 
+                       style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label for="service" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Service Interest</label>
+                <select id="service" name="service" 
+                        style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                    <option value="General Inquiry">General Inquiry</option>
+                    <option value="Birth Chart Reading">Birth Chart Reading</option>
+                    <option value="Lunar Guidance">Lunar Guidance</option>
+                    <option value="Transit Reading">Transit Reading</option>
+                    <option value="Weaving Workshop">Weaving Workshop</option>
+                    <option value="Plant Dye Workshop">Plant Dye Workshop</option>
+                    <option value="Spinning Workshop">Spinning Workshop</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Message *</label>
+                <textarea id="message" name="message" rows="5" required 
+                          style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; resize: vertical;"></textarea>
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn" style="width: 100%; margin-top: 1rem;">
+                Send Message
+            </button>
+        </form>
+        
+        <!-- Form Status Message -->
+        <div id="formMessage" style="margin-top: 1rem; padding: 1rem; border-radius: 8px; display: none;"></div>
+        
+        <!-- Alternative Contact Info -->
+        <div style="text-align: left; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+            <p><strong>Direct Email:</strong> hello@dreamthewilderness.com</p>
+            <p><strong>Sessions:</strong> Available by appointment</p>
+            <p><strong>Workshops:</strong> Seasonal offerings announced via newsletter</p>
+        </div>
+    </div>
+</section>
+
+<script>
+// Contact Form Handler
+async function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const form = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageDiv = document.getElementById('formMessage');
+    
+    // Show loading state
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+    messageDiv.style.display = 'none';
+    
+    try {
+        const formData = new FormData(form);
+        
+        const response = await fetch('/contact', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Success message
+            messageDiv.innerHTML = result.message;
+            messageDiv.style.backgroundColor = '#d4edda';
+            messageDiv.style.color = '#155724';
+            messageDiv.style.border = '1px solid #c3e6cb';
+            messageDiv.style.display = 'block';
+            
+            // Reset form
+            form.reset();
+        } else {
+            // Error message
+            messageDiv.innerHTML = result.error;
+            messageDiv.style.backgroundColor = '#f8d7da';
+            messageDiv.style.color = '#721c24';
+            messageDiv.style.border = '1px solid #f5c6cb';
+            messageDiv.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Form submission error:', error);
+        messageDiv.innerHTML = 'Sorry, there was an error sending your message. Please try again or email directly.';
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.style.border = '1px solid #f5c6cb';
+        messageDiv.style.display = 'block';
+    } finally {
+        // Reset button
+        submitBtn.textContent = 'Send Message';
+        submitBtn.disabled = false;
+    }
+}
+</script>
+
+    <script>
+        // Fixed Navigation System
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show target section
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Update active nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find and activate the corresponding nav link
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+
+            // Close mobile menu if open
+            document.getElementById('navLinks').classList.remove('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Prevent default link behavior
+            return false;
+        }
+
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Handle browser back/forward buttons (optional enhancement)
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.section) {
+                showSection(event.state.section);
+            }
+        });
+
+        // Initialize with home section and load blog posts
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('home');
+            loadSubstackPosts();
+        });
+
+        // Substack RSS Feed Integration - now using Cloudflare Worker
+        async function loadSubstackPosts() {
+            try {
+                // Use your Cloudflare Worker endpoint
+                const response = await fetch('/api/blog');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                    displayBlogPosts(data.items.slice(0, 3)); // Show latest 3 posts
+                } else {
+                    showBlogError('No posts found at this time');
+                }
+            } catch (error) {
+                console.error('Error loading Substack posts:', error);
+                showBlogError('Unable to load posts at this time');
+            }
+        }
+
+        function displayBlogPosts(posts) {
+            const blogContainer = document.getElementById('blog-posts');
+
+            blogContainer.innerHTML = posts.map(post => {
+                // Format date
+                const date = new Date(post.pubDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // Use featured image if available, otherwise use placeholder
+                const imageUrl = post.image || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop';
+
+                // Prepare description - use as-is since it's already cleaned by API
+                const description = post.description || 'Read more on Substack...';
+
+                return `
+                    <div class="service-card">
+                        <img src="${imageUrl}" alt="${escapeHtml(post.title)}" loading="lazy" style="object-fit: cover;">
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; margin-top: 1rem;">${escapeHtml(post.title)}</h3>
+                        <p style="font-size: 0.9rem; color: #8b755d; font-style: italic; margin-bottom: 1rem;">${date}</p>
+                        <p style="text-align: left; line-height: 1.6; color: #b8a082; margin-bottom: 1rem;">${escapeHtml(description)}</p>
+                        <a href="${post.link}" target="_blank" rel="noopener noreferrer" class="btn">Read Full Post</a>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showBlogError(message) {
+            const blogContainer = document.getElementById('blog-posts');
+            blogContainer.innerHTML = `
+                <div class="service-card">
+                    <h3>Wilderness Journal</h3>
+                    <p>${message}</p>
+                    <p style="margin-top: 1rem;">Visit the full blog for the latest reflections and insights.</p>
+                    <a href="https://dreamthewilderness.substack.com" target="_blank" class="btn">Visit Substack</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

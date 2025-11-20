@@ -1,0 +1,47 @@
+# Cloudflare Redirects for Dream the Wilderness
+
+# Redirect common WordPress paths to new structure
+/wp-admin/*          /       301
+/wp-content/*        /       301
+/wp-includes/*       /       301
+/wordpress/*         /       301
+
+# SEO-friendly URLs that map to sections
+/astrology           /#astrology     200
+/celestial-guidance  /#astrology     200
+/craft               /#craft         200
+/sacred-craft        /#craft         200
+/about               /#about         200
+/contact             /#contact       200
+/connect             /#contact       200
+
+# Legacy URLs from old site (customize based on your old WordPress URLs)
+/services/astrology-readings    /#astrology     301
+/services/birth-chart-reading   /#astrology     301
+/services/fiber-arts           /#craft         301
+/services/weaving              /#craft         301
+
+# Force HTTPS (redundant with Cloudflare, but good practice)
+http://dreamthewilderness.com/*    https://dreamthewilderness.com/:splat    301!
+http://www.dreamthewilderness.com/*    https://dreamthewilderness.com/:splat    301!
+
+# Handle www redirect
+https://www.dreamthewilderness.com/*    https://dreamthewilderness.com/:splat    301!
+
+# Handle common file extensions that might be requested
+/*.php              /       301
+/*.asp              /       301
+/*.aspx             /       301
+
+# Block common attack vectors
+/xmlrpc.php         /       404
+/.env               /       404
+/.git/*             /       404
+/admin              /       404
+
+# Social media and marketing redirects (for future use)
+/instagram          https://instagram.com/dreamthewilderness    302
+/facebook           https://facebook.com/dreamthewilderness     302
+/email              mailto:hello@dreamthewilderness.com         302
+/book               /#contact                                   302
+/schedule           /#contact                                   302

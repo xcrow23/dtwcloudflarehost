@@ -17,62 +17,128 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 DTWCloudflarehost/
-├── index.html              # Main SPA file (all content and styling embedded)
+├── index.html              # Main SPA file (HTML + embedded CSS)
+├── js/
+│   ├── main.js             # Navigation, section switching, event delegation
+│   ├── blog-loader.js      # Substack RSS fetching and display
+│   └── contact-form.js     # Contact form validation and submission
 ├── functions/
-│   └── contact.js          # Cloudflare Pages Function for contact form
-├── images/                 # Service images
+│   ├── contact.js          # Cloudflare Pages Function for contact form
+│   └── api/
+│       └── blog.js         # Cloudflare Worker for RSS feed caching
+├── images/                 # Optimized service images
 ├── downloads/              # PDF downloads (e.g., astrology guide)
 ├── _headers.txt            # Cloudflare HTTP headers config
 ├── _redirects.txt          # Cloudflare redirect rules
+├── CLAUDE.md               # This file - guidance for Claude Code
+└── DEV_JOURNEY.md          # Development journey and project history
 ```
 
 ## Architecture
 
-### Frontend (`index.html`)
+### Frontend (`index.html` + `js/` directory)
 
 **Single-Page Architecture:**
-- All content sections (Home, Astrology, Craft, Blog, About, Contact) are pre-rendered in HTML with CSS `display: none`
-- Navigation uses `showSection()` function to toggle sections via DOM manipulation
+- All content sections (Home, Astrology, Craft, Blog, About, Contact) are pre-rendered in HTML
+- Navigation uses hash-based routing (`#astrology`, `#contact`, etc.)
+- Event delegation for all interactive elements (no inline `onclick` attributes)
 - No build process, no external dependencies
 - Mobile-responsive design with CSS media queries
 
+**JavaScript Modules:**
+1. **`js/main.js`** - Core navigation and DOM management
+   - `showSection(sectionName)` - Display section and update URL hash
+   - `setupNavigationDelegation()` - Event delegation for nav links
+   - `setupMobileMenuToggle()` - Mobile hamburger menu handler
+   - Browser history support via `popstate` event
+   - Real-time URL syncing with browser history
+
+2. **`js/blog-loader.js`** - Substack RSS integration
+   - `loadSubstackPosts()` - Fetch from `/api/blog` endpoint with 8s timeout
+   - `displayBlogPosts(posts)` - Render blog posts as service cards
+   - `showBlogError(message)` - Error handling with retry button
+   - Skeleton loading animation during fetch
+   - XSS prevention via `escapeHtml()`
+
+3. **`js/contact-form.js`** - Contact form handling
+   - Form validation with field-specific error messages
+   - Real-time error clearing on focus/input
+   - Cloudflare Turnstile CAPTCHA integration
+   - 10-second fetch timeout with AbortController
+   - Contextual error messages for network/timeout issues
+
 **Key Features:**
-- Responsive navigation with mobile hamburger menu
-- Section-based navigation (not route-based, though `_redirects.txt` provides SPA-friendly URLs like `/#astrology`)
-- Substack RSS feed integration for blog posts (via `/api/blog` endpoint)
-- Contact form with client-side form submission via `/contact` endpoint
+- Event delegation throughout - no inline event handlers
+- Hash-based navigation with browser back/forward support
+- Responsive mobile menu with click-outside closing
+- Substack RSS feed integration with caching
+- Field-level form validation with inline error display
+- CAPTCHA protection on contact form
+- Automatic timeout handling for all async operations
 
 **Styling:**
 - Embedded CSS with earthy/mystical theme (browns, golds, earth tones)
-- Uses CSS Grid for service cards layout
-- Backdrop filters for glass-morphism effects
-- Responsive breakpoints at 768px
+- 50+ semantic CSS classes for consistency and maintainability
+- CSS Grid for service cards layout
+- Backdrop filters with Firefox fallback (solid background)
+- Responsive breakpoints at 768px for mobile
+- Explicit image dimensions to prevent layout shift
 
-### Backend (`functions/contact.js`)
+### Backend (`functions/` directory)
 
-**Cloudflare Pages Function** handling POST requests to `/contact`:
+**Two Cloudflare Pages Functions:**
+
+#### 1. Contact Form Handler (`functions/contact.js`)
+Handles POST requests to `/contact`:
 
 **Core Responsibilities:**
 1. Parse and validate form data (name, email, service, message)
-2. Basic email validation
-3. Spam filtering (checks for crypto/casino keywords)
-4. HTML escaping to prevent XSS
+2. Email format validation with regex
+3. Spam filtering (crypto, casino, lottery keywords)
+4. HTML escaping to prevent XSS attacks
 5. Send emails via Resend API
-6. Store submissions in Cloudflare KV (if configured)
+6. Store submissions in Cloudflare KV with automatic 90-day expiration
 7. CORS handling for cross-origin requests
+8. Turnstile CAPTCHA token validation (frontend-based)
 
-**Environment Variables Required:**
+**Environment Variables:**
 - `RESEND_API_KEY` - API key for Resend email service (required)
 - `CONTACT_EMAIL` - Recipient email (defaults to `hello@dreamthewilderness.com`)
 - `FROM_EMAIL` - Sender email (defaults to `noreply@dreamthewilderness.com`)
-- `CONTACTS_KV` - Optional Cloudflare KV namespace for storing submissions
+- `CONTACTS_KV` - Optional Cloudflare KV namespace for submissions (with 90-day TTL)
 
-**Security:**
+**Security Measures:**
 - CORS restricted to `https://dreamthewilderness.com`
-- HTML escaping for all user input in email content
+- HTML escaping for all user input in email
 - Email validation regex
 - Spam keyword filtering
-- CORS preflight request support (OPTIONS)
+- CORS preflight support (OPTIONS)
+- Cloudflare Turnstile CAPTCHA verification
+- KV data auto-expiration for privacy
+
+#### 2. Blog RSS Feed Handler (`functions/api/blog.js`)
+Handles GET requests to `/api/blog`:
+
+**Core Responsibilities:**
+1. Fetch Substack RSS feed from `https://dreamthewilderness.substack.com/feed`
+2. Parse XML with regex-based extraction
+3. Cache results in Cloudflare KV (10-minute TTL)
+4. Extract featured images from CDATA descriptions
+5. Clean and truncate descriptions (200 chars)
+6. Return JSON with latest posts
+7. CORS support for frontend access
+
+**Features:**
+- Automatic caching to reduce external API calls
+- Cache hit detection - returns cached data when available
+- Fresh fetch on cache miss with automatic re-caching
+- Featured image extraction from HTML in RSS descriptions
+- Sort by publish date (newest first)
+- Response includes cache metadata (cached boolean, updatedAt timestamp)
+
+**Security:**
+- CORS headers allow cross-origin requests
+- No sensitive data exposed
 
 ## Development Commands
 
@@ -173,26 +239,78 @@ python -m http.server 8000
 - Page load: ~1-2 seconds (with Cloudflare caching)
 - First paint improvement: Lazy loading defers off-screen images
 
+## Recent Improvements (Latest Session)
+
+### Code Quality & Maintainability
+- **Event Delegation Refactoring**: Removed all inline `onclick` handlers; now uses centralized event delegation for better maintainability
+- **JavaScript Modularization**: Separated concerns into three focused modules (main.js, blog-loader.js, contact-form.js)
+- **CSS Class System**: 50+ semantic classes for consistency and future dark mode support
+
+### User Experience & Validation
+- **Field-Specific Error Messages**: Form validation shows errors directly under relevant fields, not in a global message
+- **Real-Time Error Clearing**: Errors disappear when user focuses/types in field, improving user experience
+- **Contextual Error Messages**: Network, timeout, and validation errors now provide helpful guidance and actionable steps
+- **Try Again Button**: Blog loading errors include retry button and fallback to Substack link
+
+### Performance & Caching
+- **RSS Feed Caching**: Blog posts cached for 10 minutes in Cloudflare KV to reduce external API calls
+- **Image Optimization**: Lazy loading and explicit dimensions (width/height) to prevent layout shift
+- **Resource Preconnect Hints**: DNS prefetch and preconnect for external domains (Unsplash, Resend, Substack)
+
+### Browser Compatibility & Accessibility
+- **CSS Fallbacks**: Backdrop-filter effects fallback to darker backgrounds for Firefox and older browsers
+- **Improved ARIA Roles**: Removed misused `role="menubar"` from navigation; now uses semantic HTML with proper labeling
+- **Enhanced Alt Text**: All images have descriptive, contextual alt text for screen reader users
+- **Keyboard Navigation**: All interactive elements accessible via keyboard with proper focus indicators
+
+### Security & Privacy
+- **Cloudflare Turnstile CAPTCHA**: Integrated on contact form to prevent automated spam submissions
+- **Timeout Handling**: All async operations have timeouts (8s blog fetch, 10s contact form) to prevent hanging requests
+- **KV Data Expiration**: Contact submissions automatically deleted after 90 days for privacy compliance
+- **Enhanced Input Validation**: Separate validation for empty vs. invalid format errors
+
+### Code Organization Improvements
+- **Blog Endpoint Correct Path**: API endpoint moved to `functions/api/blog.js` for proper routing structure
+- **Skeleton Loader Cleanup**: Skeleton animation clears on timeout with error message instead of lingering indefinitely
+- **Error Handling Pipeline**: Specific error detection for timeouts, network issues, HTTP errors, and CAPTCHA failures
+
 ## Common Modification Tasks
 
 **Adding a New Service:**
-1. Add section in `index.html` (duplicate service-card structure)
-2. Add nav link in header
-3. Update `showSection()` navigation logic if needed
+1. Add new section in `index.html` with id matching service name
+2. Add nav link in header with `data-section` attribute
+3. Use existing CSS classes (.service-card, .hero, etc.)
+4. Event delegation automatically handles navigation
 
 **Updating Contact Form:**
-1. Modify form fields in HTML (line 398-434)
-2. Update FormData parsing in `contact.js` if adding new fields
-3. Update email template in `contact.js` (line 51-62)
+1. Add new form fields in `index.html` fieldset
+2. Update validation in `js/contact-form.js` - add new validation function
+3. Update email template in `functions/contact.js` - modify HTML template
+4. Add field-specific error span with id `{fieldname}-error`
+5. Optional: Add new environment variables for field-specific handling
 
 **Adding Blog Posts:**
-- The blog section pulls from Substack RSS automatically
-- No manual updates needed if RSS integration is working
+- Blog section automatically fetches latest posts from Substack RSS via `/api/blog` endpoint
+- No manual updates needed - all posts pulled and cached automatically
+- Update Substack feed URL in `functions/api/blog.js` if needed
 
 **Changing Email Service:**
-- Replace `sendEmail()` function in `contact.js` (line 143)
-- Update environment variables documentation
-- Update error handling for new service
+1. Replace `sendEmail()` function in `functions/contact.js`
+2. Update environment variables (RESEND_API_KEY → alternative service key)
+3. Update error handling and response messages
+4. Test with form submission
+5. Update CLAUDE.md documentation
+
+**Adding Event Handlers:**
+- Use centralized event delegation in `js/main.js` or relevant module
+- Add `data-` attributes to HTML elements to identify interactive elements
+- Never add inline `onclick` handlers - use event delegation instead
+- Example: `<button data-action="submit">` handled in setup function with `addEventListener`
+
+**Modifying Blog Display:**
+- Customize in `js/blog-loader.js` `displayBlogPosts()` function
+- Adjust post limit in `loadSubstackPosts()` - currently shows 3 latest
+- Modify error display in `showBlogError()` - including Try Again button logic
 
 ## Important Constraints
 

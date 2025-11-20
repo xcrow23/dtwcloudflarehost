@@ -134,6 +134,45 @@ python -m http.server 8000
 - Static assets (CSS/JS/images): 1 year immutable cache
 - API endpoints: No cache (no-store)
 
+## Image Optimization
+
+**Current Images:** Located in `/images/` directory
+- `astrology-landing.jpg` (83KB) - Hero image for astrology section
+- `fiber-arts-landing.jpg` (158KB) - Hero image for fiber arts section
+- `business-card.jpg` (11KB) - Currently unused, available for future content
+
+**Optimization Already Applied:**
+- Lazy loading enabled (`loading="lazy"`)
+- Explicit dimensions set (prevents layout shift)
+- Responsive design with CSS `object-fit: cover`
+
+**Further Optimization Options:**
+1. **Format Conversion:**
+   - Convert JPG to WebP for 25-35% size reduction
+   - Keep JPG as fallback for older browsers
+   - Use `<picture>` element with `srcset`
+
+2. **Compression Tools:**
+   - TinyJPG/TinyPNG for lossy compression (online)
+   - ImageMagick for batch processing: `mogrify -quality 80 *.jpg`
+   - Cloudflare Image Optimization can handle this automatically
+
+3. **Responsive Images:**
+   - Add `srcset` for different screen sizes
+   - Serve smaller images on mobile (e.g., 400px instead of 600px)
+   - Use `sizes` attribute for better optimization
+
+4. **Cloudflare Integration:**
+   - Enable Cloudflare Image Optimization in dashboard
+   - Automatic format selection (WebP for modern browsers)
+   - Automatic responsive image serving
+   - No code changes needed
+
+**Current Size Impact:**
+- Total local images: ~252KB
+- Page load: ~1-2 seconds (with Cloudflare caching)
+- First paint improvement: Lazy loading defers off-screen images
+
 ## Common Modification Tasks
 
 **Adding a New Service:**

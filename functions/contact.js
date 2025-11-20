@@ -65,20 +65,28 @@ export async function onRequestPost(context) {
     // Send email
     await sendEmail(emailContent, env);
 
-    // Store in KV if available
+    // Store in KV if available with automatic expiration
     if (env.CONTACTS_KV) {
       const timestamp = new Date().toISOString();
       const contactId = `contact_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-      
-      await env.CONTACTS_KV.put(contactId, JSON.stringify({
-        name,
-        email,
-        service,
-        message,
-        timestamp,
-        ip: request.headers.get('CF-Connecting-IP'),
-        userAgent: request.headers.get('User-Agent')
-      }));
+
+      // Store contact with 90-day expiration (7776000 seconds)
+      // This keeps records for reference while preventing indefinite storage
+      await env.CONTACTS_KV.put(
+        contactId,
+        JSON.stringify({
+          name,
+          email,
+          service,
+          message,
+          timestamp,
+          ip: request.headers.get('CF-Connecting-IP'),
+          userAgent: request.headers.get('User-Agent')
+        }),
+        {
+          expirationTtl: 7776000 // 90 days in seconds
+        }
+      );
     }
 
     return jsonResponse({ 

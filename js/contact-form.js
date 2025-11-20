@@ -56,20 +56,29 @@ function validateContactForm() {
     let isValid = true;
 
     // Validate name
-    if (!name || name.length < 2) {
-        showFieldError('name', 'Please enter a valid name (at least 2 characters)');
+    if (!name) {
+        showFieldError('name', 'Name is required');
+        isValid = false;
+    } else if (name.length < 2) {
+        showFieldError('name', 'Name must be at least 2 characters (first and last name recommended)');
         isValid = false;
     }
 
     // Validate email
-    if (!email || !isValidEmail(email)) {
-        showFieldError('email', 'Please enter a valid email address');
+    if (!email) {
+        showFieldError('email', 'Email is required so we can respond to you');
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showFieldError('email', 'Please enter a valid email address (e.g., name@example.com)');
         isValid = false;
     }
 
     // Validate message
-    if (!message || message.length < 10) {
-        showFieldError('message', 'Please enter a message with at least 10 characters');
+    if (!message) {
+        showFieldError('message', 'Message is required');
+        isValid = false;
+    } else if (message.length < 10) {
+        showFieldError('message', 'Message should be at least 10 characters to give us enough detail');
         isValid = false;
     }
 
@@ -214,10 +223,18 @@ async function handleFormSubmit(event) {
     } catch (error) {
         console.error('Form submission error:', error);
 
-        // Provide specific error message for timeouts
-        const errorMessage = error.name === 'AbortError'
-            ? 'The request took too long. Please check your connection and try again.'
-            : 'Sorry, there was an error sending your message. Please try again or email hello@dreamthewilderness.com directly.';
+        // Provide more specific error message with helpful context
+        let errorMessage = 'Sorry, there was an error sending your message. Please try again or email hello@dreamthewilderness.com directly.';
+
+        if (error.name === 'AbortError') {
+            errorMessage = 'The request took too long to complete. Your internet connection may be slow. Please check your connection and try again.';
+        } else if (error instanceof TypeError && error.message.includes('fetch')) {
+            errorMessage = 'Network error: Unable to connect. Please check your internet connection and try again.';
+        } else if (error.message.includes('401') || error.message.includes('403')) {
+            errorMessage = 'Security error: Unable to verify request. Please refresh the page and try again.';
+        } else if (error.message.includes('500') || error.message.includes('503')) {
+            errorMessage = 'Server error: The service is temporarily unavailable. Please try again later.';
+        }
 
         showFormMessage(errorMessage, 'error');
     } finally {

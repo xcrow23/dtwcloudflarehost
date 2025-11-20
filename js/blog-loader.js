@@ -42,12 +42,18 @@ async function loadSubstackPosts() {
         clearTimeout(timeoutId); // Clear timeout on error
         console.error('Error loading Substack posts:', error);
 
-        // Provide more specific error messages
+        // Provide more specific, contextual error messages
+        let errorMessage = 'Unable to load posts at this time. Please check back later.';
+
         if (error.name === 'AbortError') {
-            showBlogError('Blog posts took too long to load. Please try again later.');
-        } else {
-            showBlogError('Unable to load posts at this time. Please check back later.');
+            errorMessage = 'Blog posts took longer than expected to load. This might be a temporary network issue. Please try refreshing the page.';
+        } else if (error instanceof TypeError && error.message.includes('fetch')) {
+            errorMessage = 'Network connection issue detected. Please check your internet connection and try refreshing.';
+        } else if (error.message.includes('HTTP error')) {
+            errorMessage = 'The blog service is temporarily unavailable. Please check back shortly.';
         }
+
+        showBlogError(errorMessage);
     }
 }
 
@@ -93,9 +99,12 @@ function showBlogError(message) {
     blogContainer.innerHTML = `
         <div class="service-card content-card">
             <h3>Wilderness Journal</h3>
-            <p>${message}</p>
-            <p style="margin-top: 1rem;">Visit the full blog for the latest reflections and insights.</p>
-            <a href="https://dreamthewilderness.substack.com" target="_blank" rel="noopener noreferrer" class="btn">Visit Substack</a>
+            <p style="color: #d9534f; margin-bottom: 1rem;">⚠️ ${message}</p>
+            <p style="color: #b8a082; margin-bottom: 1.5rem;">In the meantime, visit our full blog on Substack for the latest reflections and insights from the wilderness.</p>
+            <div style="display: flex; gap: 1rem; flex-direction: column;">
+                <a href="https://dreamthewilderness.substack.com" target="_blank" rel="noopener noreferrer" class="btn">Visit Substack Blog</a>
+                <button onclick="location.reload()" style="background: linear-gradient(135deg, #666, #555); color: #f5f1e8; padding: 0.8rem 2rem; border: none; border-radius: 25px; cursor: pointer; text-decoration: none; letter-spacing: 0.5px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); transition: all 0.3s ease;">Try Again</button>
+            </div>
         </div>
     `;
 }

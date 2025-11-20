@@ -44,7 +44,7 @@ function displayBlogPosts(posts) {
         });
 
         // Use featured image if available, otherwise use placeholder
-        const imageUrl = post.image || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=200&fit=crop';
+        const imageUrl = post.image || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=300&fit=crop&q=80';
 
         // Prepare description - use as-is since it's already cleaned by API
         const description = post.description || 'Read more on Substack...';

@@ -5,6 +5,42 @@
  */
 
 /**
+ * Clear all field-specific errors
+ */
+function clearFieldErrors() {
+    const form = document.getElementById('contactForm');
+    const inputs = form.querySelectorAll('.form-input, .form-textarea, .form-select');
+    inputs.forEach(input => {
+        input.classList.remove('error');
+    });
+
+    const errorSpans = form.querySelectorAll('.field-error');
+    errorSpans.forEach(span => {
+        span.textContent = '';
+        span.classList.remove('show');
+    });
+}
+
+/**
+ * Show field-specific error
+ * @param {string} fieldName - ID of the field
+ * @param {string} message - Error message
+ */
+function showFieldError(fieldName, message) {
+    const field = document.getElementById(fieldName);
+    const errorSpan = document.getElementById(fieldName + '-error');
+
+    if (field) {
+        field.classList.add('error');
+    }
+
+    if (errorSpan) {
+        errorSpan.textContent = message;
+        errorSpan.classList.add('show');
+    }
+}
+
+/**
  * Validate form inputs before submission
  * @returns {boolean} true if valid, false otherwise
  */
@@ -14,23 +50,30 @@ function validateContactForm() {
     const email = form.elements.email.value.trim();
     const message = form.elements.message.value.trim();
 
-    // Basic validation
+    // Clear previous errors
+    clearFieldErrors();
+
+    let isValid = true;
+
+    // Validate name
     if (!name || name.length < 2) {
-        showFormValidationError('Please enter a valid name (at least 2 characters)');
-        return false;
+        showFieldError('name', 'Please enter a valid name (at least 2 characters)');
+        isValid = false;
     }
 
+    // Validate email
     if (!email || !isValidEmail(email)) {
-        showFormValidationError('Please enter a valid email address');
-        return false;
+        showFieldError('email', 'Please enter a valid email address');
+        isValid = false;
     }
 
+    // Validate message
     if (!message || message.length < 10) {
-        showFormValidationError('Please enter a message with at least 10 characters');
-        return false;
+        showFieldError('message', 'Please enter a message with at least 10 characters');
+        isValid = false;
     }
 
-    return true;
+    return isValid;
 }
 
 /**
@@ -44,23 +87,57 @@ function isValidEmail(email) {
 }
 
 /**
- * Show form validation error
- * @param {string} message - Error message
+ * Show form-level message (for success or non-field errors like CAPTCHA)
+ * @param {string} message - Message text
+ * @param {string} type - 'success' or 'error'
  */
-function showFormValidationError(message) {
+function showFormMessage(message, type = 'error') {
     const messageDiv = document.getElementById('formMessage');
     messageDiv.innerHTML = message;
-    messageDiv.classList.remove('success');
-    messageDiv.classList.add('error');
+    messageDiv.classList.remove('success', 'error');
+    messageDiv.classList.add(type);
 }
 
 /**
- * Setup contact form submission handler using event delegation
+ * Show form validation error (general, for CAPTCHA and other non-field errors)
+ * @param {string} message - Error message
+ */
+function showFormValidationError(message) {
+    showFormMessage(message, 'error');
+}
+
+/**
+ * Setup contact form handlers
  */
 function setupContactFormHandler() {
     const form = document.getElementById('contactForm');
     if (form) {
+        // Form submission
         form.addEventListener('submit', handleFormSubmit);
+
+        // Clear field errors on input
+        const fields = form.querySelectorAll('.form-input, .form-textarea, .form-select');
+        fields.forEach(field => {
+            field.addEventListener('focus', function() {
+                // Clear error for this specific field
+                this.classList.remove('error');
+                const errorSpan = document.getElementById(this.id + '-error');
+                if (errorSpan) {
+                    errorSpan.textContent = '';
+                    errorSpan.classList.remove('show');
+                }
+            });
+
+            // Also clear on input to give real-time feedback
+            field.addEventListener('input', function() {
+                this.classList.remove('error');
+                const errorSpan = document.getElementById(this.id + '-error');
+                if (errorSpan) {
+                    errorSpan.textContent = '';
+                    errorSpan.classList.remove('show');
+                }
+            });
+        });
     }
 }
 
@@ -116,9 +193,12 @@ async function handleFormSubmit(event) {
 
         if (result.success) {
             // Success message
-            messageDiv.innerHTML = result.message || 'Thank you! Your message has been sent successfully.';
-            messageDiv.classList.remove('error');
-            messageDiv.classList.add('success');
+            showFormMessage(
+                result.message || 'Thank you! Your message has been sent successfully.',
+                'success'
+            );
+            // Clear any field errors
+            clearFieldErrors();
 
             // Reset form after short delay
             setTimeout(() => {
@@ -126,22 +206,20 @@ async function handleFormSubmit(event) {
             }, 500);
         } else {
             // Error message from server
-            messageDiv.innerHTML = result.error || 'An error occurred. Please try again.';
-            messageDiv.classList.remove('success');
-            messageDiv.classList.add('error');
+            showFormMessage(
+                result.error || 'An error occurred. Please try again.',
+                'error'
+            );
         }
     } catch (error) {
         console.error('Form submission error:', error);
 
         // Provide specific error message for timeouts
-        if (error.name === 'AbortError') {
-            messageDiv.innerHTML = 'The request took too long. Please check your connection and try again.';
-        } else {
-            messageDiv.innerHTML = 'Sorry, there was an error sending your message. Please try again or email hello@dreamthewilderness.com directly.';
-        }
+        const errorMessage = error.name === 'AbortError'
+            ? 'The request took too long. Please check your connection and try again.'
+            : 'Sorry, there was an error sending your message. Please try again or email hello@dreamthewilderness.com directly.';
 
-        messageDiv.classList.remove('success');
-        messageDiv.classList.add('error');
+        showFormMessage(errorMessage, 'error');
     } finally {
         // Reset button
         submitBtn.textContent = 'Send Message';

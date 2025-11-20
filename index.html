@@ -212,6 +212,46 @@
             background: linear-gradient(135deg, #9d8469, #7a6249);
         }
 
+        /* Accessibility: Screen Reader Only Text */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Accessibility: Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #8b755d;
+            color: #fff;
+            padding: 8px;
+            z-index: 100;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+            font-weight: bold;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Form Help Text */
+        .form-help {
+            display: block;
+            font-size: 0.875rem;
+            color: #8b755d;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+
         /* Mobile Menu */
         .mobile-menu-toggle {
             display: none;
@@ -220,6 +260,24 @@
             color: #d4c4a8;
             font-size: 1.5rem;
             cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .mobile-menu-toggle:focus,
+        .mobile-menu-toggle:hover {
+            outline: 2px solid #d4c4a8;
+            outline-offset: 2px;
+        }
+
+        /* Focus indicators for better keyboard navigation */
+        a:focus,
+        button:focus,
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: 2px solid #8b755d;
+            outline-offset: 2px;
         }
 
         /* Form Styles */
@@ -407,24 +465,27 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav class="container">
+    <!-- Skip to main content link for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <nav class="container" aria-label="Main navigation">
             <div class="logo">Dream the Wilderness</div>
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#" onclick="showSection('home')" class="nav-link active">Home</a></li>
-                <li><a href="#" onclick="showSection('astrology')" class="nav-link">Celestial Guidance</a></li>
-                <li><a href="#" onclick="showSection('craft')" class="nav-link">Sacred Craft</a></li>
-                <li><a href="#" onclick="showSection('blog')" class="nav-link">Blog</a></li>
-                <li><a href="#" onclick="showSection('about')" class="nav-link">About</a></li>
-                <li><a href="#" onclick="showSection('contact')" class="nav-link">Contact</a></li>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
+            <ul class="nav-links" id="navLinks" role="menubar">
+                <li role="none"><a href="#" onclick="showSection('home')" class="nav-link active" role="menuitem">Home</a></li>
+                <li role="none"><a href="#" onclick="showSection('astrology')" class="nav-link" role="menuitem">Celestial Guidance</a></li>
+                <li role="none"><a href="#" onclick="showSection('craft')" class="nav-link" role="menuitem">Sacred Craft</a></li>
+                <li role="none"><a href="#" onclick="showSection('blog')" class="nav-link" role="menuitem">Blog</a></li>
+                <li role="none"><a href="#" onclick="showSection('about')" class="nav-link" role="menuitem">About</a></li>
+                <li role="none"><a href="#" onclick="showSection('contact')" class="nav-link" role="menuitem">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" id="main-content">
         <!-- Home Section -->
-        <section id="home" class="content-section active">
+        <section id="home" class="content-section active" role="region" aria-labelledby="home-title">
             <div class="hero">
                 <h1>What are you dreaming of?</h1>
                 <p>Step into the sacred grove where animacy, astrology, and imagination converge. Here, in this liminal space between earth and sky, ancient wisdom meets creative expression.</p>
@@ -564,42 +625,50 @@
         <p>Whether you're seeking celestial guidance or wanting to explore sacred crafts, I'd love to connect with you.</p>
 
         <!-- Contact Form -->
-        <form id="contactForm" style="margin-top: 2rem;" onsubmit="handleFormSubmit(event)">
-            <div class="form-group">
-                <label for="name" class="form-label">Name *</label>
-                <input type="text" id="name" name="name" class="form-input" required>
-            </div>
+        <form id="contactForm" style="margin-top: 2rem;" onsubmit="handleFormSubmit(event)" novalidate>
+            <fieldset>
+                <legend class="sr-only">Contact Form</legend>
 
-            <div class="form-group">
-                <label for="email" class="form-label">Email *</label>
-                <input type="email" id="email" name="email" class="form-input" required>
-            </div>
+                <div class="form-group">
+                    <label for="name" class="form-label">Name <span aria-label="required">*</span></label>
+                    <input type="text" id="name" name="name" class="form-input" required aria-required="true" aria-describedby="name-help">
+                    <span id="name-help" class="form-help">Please enter your full name</span>
+                </div>
 
-            <div class="form-group">
-                <label for="service" class="form-label">Service Interest</label>
-                <select id="service" name="service" class="form-select">
-                    <option value="General Inquiry">General Inquiry</option>
-                    <option value="Birth Chart Reading">Birth Chart Reading</option>
-                    <option value="Lunar Guidance">Lunar Guidance</option>
-                    <option value="Transit Reading">Transit Reading</option>
-                    <option value="Weaving Workshop">Weaving Workshop</option>
-                    <option value="Plant Dye Workshop">Plant Dye Workshop</option>
-                    <option value="Spinning Workshop">Spinning Workshop</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email <span aria-label="required">*</span></label>
+                    <input type="email" id="email" name="email" class="form-input" required aria-required="true" aria-describedby="email-help">
+                    <span id="email-help" class="form-help">We'll use this to respond to your inquiry</span>
+                </div>
 
-            <div class="form-group">
-                <label for="message" class="form-label">Message *</label>
-                <textarea id="message" name="message" class="form-textarea" required></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="service" class="form-label">Service Interest</label>
+                    <select id="service" name="service" class="form-select" aria-describedby="service-help">
+                        <option value="General Inquiry">General Inquiry</option>
+                        <option value="Birth Chart Reading">Birth Chart Reading</option>
+                        <option value="Lunar Guidance">Lunar Guidance</option>
+                        <option value="Transit Reading">Transit Reading</option>
+                        <option value="Weaving Workshop">Weaving Workshop</option>
+                        <option value="Plant Dye Workshop">Plant Dye Workshop</option>
+                        <option value="Spinning Workshop">Spinning Workshop</option>
+                    </select>
+                    <span id="service-help" class="form-help">Help us understand what brings you here (optional)</span>
+                </div>
 
-            <button type="submit" class="btn form-submit" id="submitBtn">
-                Send Message
-            </button>
+                <div class="form-group">
+                    <label for="message" class="form-label">Message <span aria-label="required">*</span></label>
+                    <textarea id="message" name="message" class="form-textarea" required aria-required="true" aria-describedby="message-help"></textarea>
+                    <span id="message-help" class="form-help">Tell us about your inquiry or interest</span>
+                </div>
+
+                <button type="submit" class="btn form-submit" id="submitBtn" aria-label="Send contact form">
+                    Send Message
+                </button>
+            </fieldset>
         </form>
 
         <!-- Form Status Message -->
-        <div id="formMessage" class="form-message"></div>
+        <div id="formMessage" class="form-message" role="alert" aria-live="polite" aria-atomic="true"></div>
 
         <!-- Alternative Contact Info -->
         <div class="contact-info">

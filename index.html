@@ -46,9 +46,6 @@
     <meta name="apple-mobile-web-app-title" content="Dream the Wilderness">
     <meta name="application-name" content="Dream the Wilderness">
 
-    <!-- Cloudflare Turnstile (CAPTCHA) -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
     {
@@ -802,11 +799,6 @@
                     <textarea id="message" name="message" class="form-textarea" required aria-required="true" aria-describedby="message-help message-error"></textarea>
                     <span id="message-help" class="form-help">Tell us about your inquiry or interest</span>
                     <span id="message-error" class="field-error" role="alert" aria-live="polite"></span>
-                </div>
-
-                <!-- Cloudflare Turnstile CAPTCHA -->
-                <div class="form-group" style="display: flex; justify-content: center; transform: scale(0.9); transform-origin: 0 0;">
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAACb1WYg-6YEa8V3" data-theme="dark"></div>
                 </div>
 
                 <button type="submit" class="btn form-submit" id="submitBtn" aria-label="Send contact form">

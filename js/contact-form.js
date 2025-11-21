@@ -162,13 +162,6 @@ async function handleFormSubmit(event) {
         return;
     }
 
-    // Check Turnstile token
-    const turnstileToken = document.querySelector('[name="cf-turnstile-response"]');
-    if (!turnstileToken || !turnstileToken.value) {
-        showFormValidationError('Please complete the security verification');
-        return;
-    }
-
     const form = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
     const messageDiv = document.getElementById('formMessage');

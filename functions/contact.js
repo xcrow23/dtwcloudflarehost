@@ -4,9 +4,20 @@
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  // Handle CORS
+  // Handle CORS - Allow both custom domain and Cloudflare Pages dev URLs
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = [
+    'https://dreamthewilderness.com',
+    'http://localhost:8000',
+    'http://localhost:3000'
+  ];
+
+  // Also allow any *.pages.dev subdomain (Cloudflare Pages deployments)
+  const isPagesDev = origin && origin.endsWith('.pages.dev');
+  const isAllowed = allowedOrigins.includes(origin) || isPagesDev;
+
   const corsHeaders = {
-    'Access-Control-Allow-Origin': 'https://dreamthewilderness.com',
+    'Access-Control-Allow-Origin': isAllowed ? origin : 'https://dreamthewilderness.com',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
@@ -105,10 +116,22 @@ export async function onRequestPost(context) {
 
 // Handle CORS preflight requests
 export async function onRequestOptions(context) {
+  const { request } = context;
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = [
+    'https://dreamthewilderness.com',
+    'http://localhost:8000',
+    'http://localhost:3000'
+  ];
+
+  // Also allow any *.pages.dev subdomain (Cloudflare Pages deployments)
+  const isPagesDev = origin && origin.endsWith('.pages.dev');
+  const isAllowed = allowedOrigins.includes(origin) || isPagesDev;
+
   return new Response(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': 'https://dreamthewilderness.com',
+      'Access-Control-Allow-Origin': isAllowed ? origin : 'https://dreamthewilderness.com',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400'

@@ -110,9 +110,16 @@ function parseRssFeed(xmlText) {
     while ((itemMatch = itemRegex.exec(xmlText)) !== null) {
       const itemContent = itemMatch[1];
 
-      // Extract title
-      const titleMatch = itemContent.match(/<title[^>]*>([^<]*)<\/title>/);
-      const title = titleMatch ? decodeHtml(titleMatch[1]) : 'Untitled';
+      // Extract title (handle both plain text and CDATA)
+      let title = 'Untitled';
+      const titleCdataMatch = itemContent.match(/<title[^>]*><!\[CDATA\[(.*?)\]\]><\/title>/);
+      const titlePlainMatch = itemContent.match(/<title[^>]*>([^<]+)<\/title>/);
+
+      if (titleCdataMatch) {
+        title = decodeHtml(titleCdataMatch[1].trim());
+      } else if (titlePlainMatch) {
+        title = decodeHtml(titlePlainMatch[1].trim());
+      }
 
       // Extract description
       const descriptionMatch = itemContent.match(/<description[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/description>/);

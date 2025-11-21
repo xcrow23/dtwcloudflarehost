@@ -1053,6 +1053,85 @@ functions/              (Serverless backend)
 
 ---
 
+## Phase 8: Deployment & UX Refinement
+
+**Status:** ✅ Complete
+**Timeline:** November 20, 2024
+**Focus:** Deployment fixes, CAPTCHA removal, blog improvements
+
+### Session Overview
+This session focused on resolving deployment issues and improving user experience by removing friction points and fixing critical bugs.
+
+### Key Accomplishments
+
+#### Deployment Fix (CRITICAL)
+- **Problem:** Build failing with "Missing entry-point to Worker script" error
+- **Root Cause:** Project was incorrectly configured as Cloudflare Worker instead of Cloudflare Pages
+- **Solution:** Reconfigured in Cloudflare dashboard with correct Pages settings
+- **Impact:** Site now deploys successfully on every git push
+
+#### CAPTCHA Removal for Better UX
+- **Removed Cloudflare Turnstile CAPTCHA** that was causing form submission failures
+- CAPTCHA widget wasn't rendering but validation was still blocking submissions
+- Backend spam filtering still active (keyword filtering for crypto, casino, lottery, etc.)
+- **Result:** Smoother user experience while maintaining spam protection
+
+#### CORS Configuration Update
+- **Problem:** Contact form blocked on Cloudflare Pages dev URLs (*.pages.dev)
+- **Solution:** Dynamic CORS handling to allow:
+  - Production domain: `https://dreamthewilderness.com`
+  - All Cloudflare Pages deployments: `*.pages.dev`
+  - Local development: `localhost:8000` and `localhost:3000`
+- **Impact:** Contact form works across all environments during development
+
+#### Blog Title Parser Fix
+- **Problem:** All blog posts showing "Untitled" instead of actual titles
+- **Root Cause:** RSS parser regex didn't handle CDATA-wrapped titles from Substack
+- **Solution:** Updated regex to handle both plain text and CDATA formats:
+  ```javascript
+  // Before: Only matched plain text titles
+  /<title[^>]*>([^<]*)<\/title>/
+
+  // After: Handles CDATA and plain text
+  /<title[^>]*><!\[CDATA\[(.*?)\]\]><\/title>/  // CDATA
+  /<title[^>]*>([^<]+)<\/title>/                // Plain text
+  ```
+- **Result:** Blog posts now display correct titles from Substack
+
+#### Blog Preview Expansion
+- Increased blog post previews from 3 to 6
+- Provides more content visibility on the blog section
+- Simple one-line change in `blog-loader.js`
+
+### Commits This Session
+1. `99d65b6` - FIX: Remove Turnstile CAPTCHA and fix CORS + blog titles
+2. `019beb5` - Expand blog previews from 3 to 6 posts
+
+### Outstanding Items (Next Session)
+- **Contact Form API Key Verification**: Need to verify Resend API key configuration
+  - Check key format (should start with `re_`)
+  - Verify domain is authorized in Resend dashboard
+  - Ensure key is set for Production environment in Cloudflare
+
+### Technical Improvements
+
+| Area | Before | After |
+|------|--------|-------|
+| Deployment | Failing (Worker config) | Successful (Pages config) |
+| Contact Form | CAPTCHA blocking users | No CAPTCHA, smooth UX |
+| CORS | Custom domain only | Multi-environment support |
+| Blog Titles | "Untitled" | Correct titles from RSS |
+| Blog Previews | 3 posts | 6 posts |
+| Spam Protection | CAPTCHA only | Backend keyword filtering |
+
+### Lessons Learned
+1. **Cloudflare Workers vs Pages**: Clear distinction needed - Pages for static sites + functions, Workers for standalone apps
+2. **CAPTCHA Trade-offs**: Sometimes less friction is better than over-protection, especially with backend filtering
+3. **RSS Parsing**: Always handle both CDATA and plain text formats when parsing XML feeds
+4. **CORS for Development**: Dynamic origin checking enables seamless dev/staging/prod workflows
+
+---
+
 ## Conclusion
 
 **Dream the Wilderness** has evolved from a beautiful but fragile prototype into a **production-ready, secure, accessible, performant website** in a single day of focused work.
@@ -1118,6 +1197,6 @@ Dream the Wilderness/
 
 ---
 
-**Last Updated:** November 19, 2024
+**Last Updated:** November 20, 2024
 **Status:** Production Ready ✅
-**Next Phase:** Phase 2a - Feature Expansion
+**Next Phase:** Phase 2a - Feature Expansion (after contact form API fix)

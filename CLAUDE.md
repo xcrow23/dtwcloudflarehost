@@ -73,7 +73,7 @@ DTWCloudflarehost/
 - Responsive mobile menu with click-outside closing
 - Substack RSS feed integration with caching
 - Field-level form validation with inline error display
-- CAPTCHA protection on contact form
+- Backend spam filtering (keyword-based)
 - Automatic timeout handling for all async operations
 
 **Styling:**
@@ -98,8 +98,7 @@ Handles POST requests to `/contact`:
 4. HTML escaping to prevent XSS attacks
 5. Send emails via Resend API
 6. Store submissions in Cloudflare KV with automatic 90-day expiration
-7. CORS handling for cross-origin requests
-8. Turnstile CAPTCHA token validation (frontend-based)
+7. Dynamic CORS handling for multi-environment support
 
 **Environment Variables:**
 - `RESEND_API_KEY` - API key for Resend email service (required)
@@ -108,20 +107,19 @@ Handles POST requests to `/contact`:
 - `CONTACTS_KV` - Optional Cloudflare KV namespace for submissions (with 90-day TTL)
 
 **Security Measures:**
-- CORS restricted to `https://dreamthewilderness.com`
+- Dynamic CORS (allows production domain, *.pages.dev, and localhost)
 - HTML escaping for all user input in email
 - Email validation regex
-- Spam keyword filtering
+- Spam keyword filtering (crypto, casino, lottery, etc.)
 - CORS preflight support (OPTIONS)
-- Cloudflare Turnstile CAPTCHA verification
-- KV data auto-expiration for privacy
+- KV data auto-expiration for privacy (90-day TTL)
 
 #### 2. Blog RSS Feed Handler (`functions/api/blog.js`)
 Handles GET requests to `/api/blog`:
 
 **Core Responsibilities:**
 1. Fetch Substack RSS feed from `https://dreamthewilderness.substack.com/feed`
-2. Parse XML with regex-based extraction
+2. Parse XML with regex-based extraction (handles CDATA and plain text)
 3. Cache results in Cloudflare KV (10-minute TTL)
 4. Extract featured images from CDATA descriptions
 5. Clean and truncate descriptions (200 chars)
@@ -132,8 +130,10 @@ Handles GET requests to `/api/blog`:
 - Automatic caching to reduce external API calls
 - Cache hit detection - returns cached data when available
 - Fresh fetch on cache miss with automatic re-caching
+- Title extraction supports both CDATA and plain text formats
 - Featured image extraction from HTML in RSS descriptions
 - Sort by publish date (newest first)
+- Frontend displays 6 latest posts
 - Response includes cache metadata (cached boolean, updatedAt timestamp)
 
 **Security:**
@@ -175,9 +175,11 @@ python -m http.server 8000
 
 ### Blog Integration
 
-- Loads Substack RSS feed from `/api/blog` endpoint (not yet documented - likely another Cloudflare Worker)
-- `loadSubstackPosts()` function (line 571) fetches latest 3 posts
-- Displays posts as service cards with truncated description, date, and link to full post
+- Loads Substack RSS feed from `/api/blog` endpoint
+- `loadSubstackPosts()` function fetches and displays latest 6 posts
+- Handles CDATA-wrapped titles from Substack RSS feed
+- Displays posts as service cards with featured images, truncated description, date, and link to full post
+- 8-second fetch timeout with 10-second skeleton loader timeout
 
 ### Redirects Configuration (`_redirects.txt`)
 

@@ -34,7 +34,7 @@ async function loadSubstackPosts() {
         clearTimeout(timeoutId); // Clear loader timeout on success
 
         if (data.status === 'ok' && data.items && data.items.length > 0) {
-            displayBlogPosts(data.items.slice(0, 3)); // Show latest 3 posts
+            displayBlogPosts(data.items.slice(0, 6)); // Show latest 6 posts
         } else {
             showBlogError('No posts found at this time');
         }

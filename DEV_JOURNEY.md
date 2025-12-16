@@ -1197,6 +1197,280 @@ Dream the Wilderness/
 
 ---
 
-**Last Updated:** November 20, 2024
+## Phase 9: December 2025 Redesign - Courtney's Creative Direction
+
+**Status:** ✅ Complete
+**Timeline:** December 15, 2025
+**Focus:** Complete site transformation aligned with Courtney's personal brand
+
+### Session Overview
+Major redesign based on creative feedback from Courtney Chandrea. Removed dual-portal concept, simplified homepage structure, transformed visual design from dark to light theme, and aligned all content with Courtney's Substack brand presence.
+
+### Key Accomplishments
+
+#### Content Transformation
+**Removed Dual-Portal Concept**
+- Old structure: Separate Celestial Guidance and Sacred Craft landing pages
+- New structure: Single simplified homepage with offerings and projects
+- Fiber arts content archived (kept in repo as HTML comments, not displayed)
+
+**New Homepage Structure**
+- **Offerings Section:**
+  - Birth chart readings (60-minute sliding-scale sessions)
+  - Re-Rooting: A Landmark Map to the Wild Soul ebook
+- **Current Projects:**
+  - The ecology of the zodiac essay series
+- **About Band:**
+  - Courtney's photo with short bio
+  - Link to full about page
+
+**Navigation Overhaul**
+- Old: Home, Celestial Guidance, Sacred Craft, Blog, About, Contact
+- New: home, blog, book a reading, about, contact
+- All lowercase (matching Substack brand)
+- "Book a Reading" section: Simplified explanation page linking to Calendly
+
+**About Page Update**
+- Full biography from Courtney's Substack
+- Professional background (Nightlight School certifications)
+- Notable projects (Re-Rooting, fiber patterns)
+- Links to Substack and Ravelry
+- All in lowercase style except proper nouns
+
+#### Visual Design Transformation
+
+**Color Scheme Inversion**
+```
+Before (Dark Theme):
+- Background: #3d2914 → #1a0f08 (dark brown gradient)
+- Text: #e8dcc0 (light beige)
+- Accents: #d4c4a8 (tan)
+
+After (Light Theme):
+- Background: #F2F2E3 (light cream)
+- Text: #3d2914 (dark earthy brown)
+- Accents: #8b755d (warm tan)
+```
+
+**Typography Updates**
+- All text converted to lowercase except proper nouns
+- Examples: "home", "blog", "book a reading" vs "Courtney Chandrea", "Re-Rooting"
+- Maintains Georgia serif for mystical aesthetic
+- Improved readability with dark text on light background
+
+**Visual Enhancements Added**
+- Scroll-triggered fade-in animations using Intersection Observer
+- Staggered animation delays for grid items (0.1s, 0.2s, 0.3s)
+- Organic SVG blob shapes with subtle drift animations
+- Enhanced hover effects: lift + shadow increase
+- Parallax background attachment (where supported)
+- Smooth transitions throughout (0.3s cubic-bezier)
+
+#### Assets Integration
+
+**Images Sourced**
+- Courtney's profile photo: Substack CDN (554x554)
+  - Used in about section and homepage band
+- Dancing cranes: Libra ecology essay (2372x1554)
+  - Used for ecology of the zodiac project card
+- Re-Rooting book cover: Barnes & Noble (600x595)
+  - Used for Re-Rooting offering card
+
+**Local Images Repurposed**
+- `astrology-landing.jpg`: Now used for birth chart readings
+- `fiber-arts-landing.jpg`: Archived, not displayed
+
+#### Technical Updates
+
+**SEO & Metadata**
+- Changed structured data from LocalBusiness to Person schema
+- Updated meta tags focusing on Courtney Chandrea
+- Keywords updated: Hellenistic astrology, animist, rewilder, ecology
+- Social sharing images now use Courtney's profile photo
+- Updated Open Graph and Twitter Card tags
+
+**Redirects Configuration**
+- `/astrology` → `/#reading` (301 redirect)
+- `/celestial-guidance` → `/#reading` (301)
+- `/craft` → `/#home` (301 redirect)
+- `/sacred-craft` → `/#home` (301)
+- `/reading` → `/#reading` (200)
+- `/book-a-reading` → `/#reading` (200)
+- Legacy paths all redirect appropriately
+
+**Routing Updates**
+- Generic hash-based routing in `main.js` automatically handles new sections
+- No code changes needed - data-driven navigation
+- Browser history support preserved
+
+### Preserved Functionality
+
+**Backend Unchanged**
+- Contact form with Resend API integration
+- Blog RSS feed with 10-minute KV caching
+- Spam filtering (keyword-based)
+- Field-specific form validation
+- All security measures maintained
+
+**Accessibility Maintained**
+- WCAG 2.1 AA+ compliance
+- Keyboard navigation
+- Screen reader support
+- Semantic HTML structure
+- Focus indicators
+- Skip-to-content link
+
+**Performance Features**
+- Lazy loading on all images
+- Explicit image dimensions
+- Resource preconnect hints
+- Cloudflare CDN caching
+- No build process required
+
+### Implementation Details
+
+**CSS Animation System**
+```css
+/* Scroll-triggered fade-ins */
+.fade-in-element {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in-element.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered service cards */
+.service-card:nth-child(1).visible { transition-delay: 0.1s; }
+.service-card:nth-child(2).visible { transition-delay: 0.2s; }
+.service-card:nth-child(3).visible { transition-delay: 0.3s; }
+```
+
+**Organic SVG Shapes**
+- 4 animated blob shapes in earthy tones
+- Subtle drift animations (18-27 second cycles)
+- Fixed positioning, behind all content
+- Very low opacity (0.03) for subtle texture
+- Gaussian blur filter for organic feel
+
+**JavaScript Enhancements**
+```javascript
+// Intersection Observer for scroll animations
+const fadeInObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  },
+  { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+);
+
+// Observe all service cards
+document.querySelectorAll('.service-card').forEach(card => {
+  fadeInObserver.observe(card);
+});
+```
+
+### Commits This Session
+
+1. `4c6c1e8` - Major redesign: Simplified homepage with Courtney's creative direction
+   - Remove dual-portal design
+   - New offerings & projects sections
+   - Archive fiber arts content
+   - Update navigation to lowercase
+   - Transform color scheme to light theme
+   - Add scroll animations and organic shapes
+   - Update SEO metadata
+
+2. `677592c` - Add Re-Rooting book cover from Barnes & Noble
+   - Replace placeholder with actual book cover
+   - Complete visual design
+
+### File Changes
+
+**Modified Files:**
+- `index.html` - Complete content and style transformation
+- `_redirects.txt` - Updated for new navigation structure
+- `CLAUDE.md` - Documentation update
+- `DEV_JOURNEY.md` - This entry
+
+**Preserved Files:**
+- `js/main.js` - Generic routing, no changes needed
+- `js/blog-loader.js` - Unchanged
+- `js/contact-form.js` - Unchanged
+- `functions/contact.js` - Backend unchanged
+- `functions/api/blog.js` - Backend unchanged
+
+### Design Philosophy
+
+**Content Fidelity**
+- Used Courtney's exact words verbatim (1:1 fidelity)
+- No paraphrasing or editorial changes
+- Preserved her lowercase stylistic choice
+- Maintained her poetic rhythm and voice
+
+**Visual Enhancement Approach**
+- Subtle modernization without overshadowing content
+- Animations support content, don't distract
+- Organic shapes evoke wilderness theme
+- Light theme feels more contemporary while keeping earth tones
+- Every enhancement purposeful, not decorative
+
+**Brand Consistency**
+- Aligned with Substack presence
+- Lowercase typography matches her newsletter
+- Colors (#F2F2E3) from her email signature
+- Professional yet mystical aesthetic
+- Personal brand (Courtney) vs. business brand (dual services)
+
+### Statistics
+
+| Metric | Count |
+|--------|-------|
+| Lines of Code Modified | 500+ |
+| Sections Removed | 2 (Astrology, Craft) |
+| Sections Added | 1 (Reading) |
+| CSS Classes Added | 15+ (animations, transitions) |
+| Images Integrated | 3 (profile, cranes, book) |
+| Color Scheme Updates | 25+ properties |
+| Animation Keyframes | 4 |
+| SVG Elements | 4 (organic shapes) |
+| Redirects Updated | 8 |
+| Meta Tags Updated | 12 |
+
+### Lessons Learned
+
+1. **Designer Intent is Sacred**: When working with creative talent, preserve their exact words and vision
+2. **Color Inversion Requires Systematic Approach**: Changed 50+ color values, must be thorough
+3. **Animation Restraint**: Subtle enhancements > flashy effects
+4. **Archived Content Strategy**: Comment out rather than delete (preserves git history + option to restore)
+5. **Brand Alignment**: Personal website should match creator's established voice (Substack)
+
+### Future Considerations
+
+**Content Management**
+- Re-Rooting book cover image needs periodic updates if cover changes
+- Ecology series URL may change as project evolves
+- Profile photo should update if Courtney changes Substack image
+
+**Feature Additions (Optional)**
+- Dark mode toggle (CSS variables make this trivial now)
+- Additional project cards as Courtney creates more content
+- Testimonials section for readings
+- Calendar integration for booking
+
+**Performance**
+- Consider WebP format for local images (browser support now excellent)
+- Could add more sophisticated parallax on hero sections
+- Intersection Observer could trigger more effects
+
+---
+
+**Last Updated:** December 15, 2025
 **Status:** Production Ready ✅
-**Next Phase:** Phase 2a - Feature Expansion (after contact form API fix)
+**Next Phase:** Support mode - respond to Courtney's feedback and feature requests

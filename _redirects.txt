@@ -7,19 +7,22 @@
 /wordpress/*         /       301
 
 # SEO-friendly URLs that map to sections
-/astrology           /#astrology     200
-/celestial-guidance  /#astrology     200
-/craft               /#craft         200
-/sacred-craft        /#craft         200
+/reading             /#reading       200
+/book-a-reading      /#reading       200
+/astrology           /#reading       301
+/celestial-guidance  /#reading       301
+/craft               /#home          301
+/sacred-craft        /#home          301
 /about               /#about         200
 /contact             /#contact       200
 /connect             /#contact       200
+/blog                /#blog          200
 
-# Legacy URLs from old site (customize based on your old WordPress URLs)
-/services/astrology-readings    /#astrology     301
-/services/birth-chart-reading   /#astrology     301
-/services/fiber-arts           /#craft         301
-/services/weaving              /#craft         301
+# Legacy URLs from old site (redirect to appropriate new sections)
+/services/astrology-readings    /#reading       301
+/services/birth-chart-reading   /#reading       301
+/services/fiber-arts           /#home          301
+/services/weaving              /#home          301
 
 # Force HTTPS (redundant with Cloudflare, but good practice)
 http://dreamthewilderness.com/*    https://dreamthewilderness.com/:splat    301!

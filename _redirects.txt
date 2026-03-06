@@ -7,16 +7,16 @@
 /wordpress/*         /       301
 
 # SEO-friendly URLs that map to sections
-/reading             /#reading       200
-/book-a-reading      /#reading       200
+/reading             /#reading       301
+/book-a-reading      /#reading       301
 /astrology           /#reading       301
 /celestial-guidance  /#reading       301
 /craft               /#home          301
 /sacred-craft        /#home          301
-/about               /#about         200
-/contact             /#contact       200
-/connect             /#contact       200
-/blog                /#blog          200
+/about               /#about         301
+/contact             /#contact       301
+/connect             /#contact       301
+/blog                /#blog          301
 
 # Legacy URLs from old site (redirect to appropriate new sections)
 /services/astrology-readings    /#reading       301

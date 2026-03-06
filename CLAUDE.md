@@ -70,7 +70,6 @@ DTWCloudflarehost/
 3. **`js/contact-form.js`** - Contact form handling
    - Form validation with field-specific error messages
    - Real-time error clearing on focus/input
-   - Cloudflare Turnstile CAPTCHA integration
    - 10-second fetch timeout with AbortController
    - Contextual error messages for network/timeout issues
 
@@ -80,7 +79,7 @@ DTWCloudflarehost/
 - Responsive mobile menu with click-outside closing
 - Substack RSS feed integration with caching
 - Field-level form validation with inline error display
-- Backend spam filtering (keyword-based)
+- Backend spam filtering (keyword-based, Turnstile CAPTCHA removed - see DEV_JOURNEY.md Phase 7)
 - Automatic timeout handling for all async operations
 
 **Styling:**
@@ -346,7 +345,6 @@ python -m http.server 8000
 - **Keyboard Navigation**: All interactive elements accessible via keyboard with proper focus indicators
 
 ### Security & Privacy
-- **Cloudflare Turnstile CAPTCHA**: Integrated on contact form to prevent automated spam submissions
 - **Timeout Handling**: All async operations have timeouts (8s blog fetch, 10s contact form) to prevent hanging requests
 - **KV Data Expiration**: Contact submissions automatically deleted after 90 days for privacy compliance
 - **Enhanced Input Validation**: Separate validation for empty vs. invalid format errors
@@ -391,7 +389,7 @@ python -m http.server 8000
 
 **Modifying Blog Display:**
 - Customize in `js/blog-loader.js` `displayBlogPosts()` function
-- Adjust post limit in `loadSubstackPosts()` - currently shows 3 latest
+- Adjust post limit in `loadSubstackPosts()` - currently shows 6 latest
 - Modify error display in `showBlogError()` - including Try Again button logic
 
 ## Important Constraints

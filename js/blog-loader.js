@@ -98,16 +98,25 @@ function showBlogError(message) {
     const blogContainer = document.getElementById('blog-posts');
     blogContainer.innerHTML = `
         <div class="service-card content-card">
-            <h3>Wilderness Journal</h3>
-            <p style="color: #d9534f; margin-bottom: 1rem;">⚠️ ${message}</p>
-            <p style="color: #b8a082; margin-bottom: 1.5rem;">In the meantime, visit our full blog on Substack for the latest reflections and insights from the wilderness.</p>
-            <div style="display: flex; gap: 1rem; flex-direction: column;">
-                <a href="https://dreamthewilderness.substack.com" target="_blank" rel="noopener noreferrer" class="btn">Visit Substack Blog</a>
-                <button onclick="location.reload()" style="background: linear-gradient(135deg, #666, #555); color: #f5f1e8; padding: 0.8rem 2rem; border: none; border-radius: 25px; cursor: pointer; text-decoration: none; letter-spacing: 0.5px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); transition: all 0.3s ease;">Try Again</button>
+            <h3>recent writing</h3>
+            <p class="blog-error-message">${message}</p>
+            <p class="blog-error-subtext">visit the full archive on Substack in the meantime.</p>
+            <div class="blog-error-actions">
+                <a href="https://dreamthewilderness.substack.com" target="_blank" rel="noopener noreferrer" class="btn">visit Substack</a>
+                <button data-action="retry-blog" class="btn btn-secondary">try again</button>
             </div>
         </div>
     `;
 }
+
+/**
+ * Event delegation for blog retry button
+ */
+document.addEventListener('click', function(event) {
+    if (event.target.closest('[data-action="retry-blog"]')) {
+        loadSubstackPosts();
+    }
+});
 
 /**
  * Escape HTML special characters to prevent XSS

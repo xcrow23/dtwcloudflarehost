@@ -4,7 +4,7 @@
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 1. [The Vision](#the-vision)
 2. [Phase 0: Initial Build](#phase-0-initial-build)
 3. [Phase 1: Foundation](#phase-1-foundation)
@@ -13,8 +13,11 @@
 6. [Phase 4: SEO & Discovery](#phase-4-seo--discovery)
 7. [Phase 5: Form & Error Handling](#phase-5-form--error-handling)
 8. [Phase 6: Production Hardening](#phase-6-production-hardening)
-9. [Lessons Learned](#lessons-learned)
-10. [Future Roadmap](#future-roadmap)
+9. [Phase 7: Refinement & Documentation](#phase-7-refinement--documentation)
+10. [Phase 8: Deployment & UX Refinement](#phase-8-deployment--ux-refinement)
+11. [Phase 9: Courtney's Creative Direction - Full Redesign](#phase-9-courtneys-creative-direction---full-redesign)
+12. [Phase 10: Code Hygiene & Dev Infrastructure](#phase-10-code-hygiene--dev-infrastructure)
+13. [Current State](#current-state-march-2026)
 
 ---
 
@@ -1130,347 +1133,184 @@ This session focused on resolving deployment issues and improving user experienc
 3. **RSS Parsing**: Always handle both CDATA and plain text formats when parsing XML feeds
 4. **CORS for Development**: Dynamic origin checking enables seamless dev/staging/prod workflows
 
----
-
-## Conclusion
-
-**Dream the Wilderness** has evolved from a beautiful but fragile prototype into a **production-ready, secure, accessible, performant website** in a single day of focused work.
-
-### Key Achievements
-✅ **Security** - CAPTCHA, escaping, timeouts, 90-day KV expiration, CORS
-✅ **Performance** - Lazy loading, caching (10min blog, 90day contacts), preconnect hints
-✅ **Accessibility** - WCAG 2.1 AA+, semantic HTML, enhanced alt text, keyboard nav
-✅ **Code Quality** - Event delegation, modular JS, DRY principles, zero tech debt
-✅ **User Experience** - Field-level errors, contextual help, retry logic, error recovery
-✅ **Reliability** - Timeout handling, error fallbacks, Firefox/Safari compatibility
-✅ **SEO** - Meta tags, Open Graph, Twitter Cards, JSON-LD, descriptive alt text
-✅ **DevOps** - Git auto-deploy, 24 commits, production-ready pipeline
-✅ **Documentation** - CLAUDE.md, DEV_JOURNEY.md, code comments, modification guides
-
-### The Path Forward
-With the foundation solid and critical issues resolved, the next phases will focus on:
-- Feature expansion (dark mode, analytics)
-- Advanced content (blog self-hosting, e-commerce)
-- Global reach (i18n, multi-language)
-- Business growth (analytics, optimization)
-
-This project demonstrates that **excellent engineering doesn't require complexity**. Vanilla JavaScript, semantic HTML, and thoughtful CSS can create something beautiful, fast, and maintainable.
 
 ---
 
-**Built with ❤️ and 🌙 mysticism**
+## Phase 9: Courtney's Creative Direction - Full Redesign
 
-*Dream the Wilderness*
-A bridge between the celestial and the earthly | Astrology & Sacred Fiber Arts
+**Status:** Complete
+**Timeline:** December 2025
+**Focus:** Complete site redesign based on Courtney's direct creative brief
+
+### The Brief
+
+Courtney provided a written brief (Notes_From_Courtney.txt) calling for:
+- Ditch the dual-portal concept (Celestial Guidance + Sacred Craft)
+- Simple homepage with current offerings, projects, and a short about blurb
+- Navigation: home, blog, book a reading, about, contact (all lowercase)
+- Lowercase typography everywhere except proper nouns (matching Substack brand)
+- Color base: #F2F2E3 (cream), warm tan accent (#8b755d)
+
+### Visual Identity Transformation
+
+| Before (dark/mystical) | After (light/organic) |
+|------------------------|----------------------|
+| Dark earthy backgrounds | Light cream (#F2F2E3) |
+| Light beige text | Dark earthy brown (#3d2914) |
+| Dual-portal homepage | Offerings + Projects sections |
+| Mystical gateway concept | Clean, personal, direct |
+
+Added: SVG organic blob shapes with subtle animations, scroll-triggered fade-in effects.
+
+### Content Architecture
+
+**Offerings:**
+- Birth chart readings (60-minute sliding-scale sessions)
+- Re-Rooting: A Landmark Map to the Wild Soul (B&N link)
+
+**Current Projects:**
+- The ecology of the zodiac (Substack essay series)
+
+**Homepage band:** Courtney's profile photo + short bio with link to full about page
+
+**Archived:** Fiber arts / Sacred Craft section kept as HTML comment in repo, not displayed
+
+### Navigation Changes
+
+| Old | New |
+|-----|-----|
+| Home | home |
+| Celestial Guidance | book a reading |
+| Sacred Craft | (archived) |
+| Blog | blog |
+| About | about |
+| Contact | contact |
+
+All lowercase to match Substack brand voice.
+
+### Assets Integrated
+- Courtney's profile photo: Substack S3 CDN (554x554)
+- Dancing cranes: from Libra ecology essay on Substack (2372x1554)
+- Re-Rooting book cover: Barnes & Noble product image (600x595)
+
+**Note:** All three are external URLs that could break if hosts change. Downloading to /images/ is a standing improvement item.
+
+### Commits This Phase
+- `4c6c1e8` - Major redesign: Simplified homepage with Courtney's creative direction
+- `677592c` - Add Re-Rooting book cover from Barnes & Noble
+- `78a2883` - docs: Update documentation for Phase 9 redesign
 
 ---
 
-## Appendix: File Structure
+## Phase 10: Code Hygiene & Dev Infrastructure
 
+**Status:** Complete
+**Timeline:** March 2026
+**Focus:** Fixing accumulated technical debt, improving local dev setup
+
+### Issues Fixed
+
+#### blog-loader.js: Inline onclick violation
+showBlogError() had a "Try Again" button using `onclick="location.reload()"` and extensive inline styles - a regression from the event delegation architecture.
+
+**Fix:** Button now uses `data-action="retry-blog"`. Document-level click delegation calls `loadSubstackPosts()` on click. Inline styles replaced with semantic CSS classes: `.blog-error-message`, `.blog-error-subtext`, `.blog-error-actions`, `.btn-secondary`.
+
+#### index.html: Useless browser preconnect
+`<link rel="preconnect" href="https://api.resend.com">` served no purpose - Resend is called server-side from the Cloudflare Worker, never by the browser.
+
+**Fix:** Removed preconnect and dns-prefetch for api.resend.com.
+
+#### index.html: Low-contrast h4 colors in about section
+About section h4 headings used `color: #d4c4a8` (pale tan on cream). Fails WCAG AA.
+
+**Fix:** Changed to `color: #5d4a3a` (medium brown, matches secondary text).
+
+#### _redirects.txt: 200 rewrites broken for hash-fragment routes
+Routes like `/reading /#reading 200` used Cloudflare Pages 200 rewrites. Cloudflare strips hash fragments server-side, so index.html was served without the fragment and JS couldn't determine which section to show.
+
+**Fix:** All SPA section routes changed to 301 redirects. Browser handles the redirect, navigates to `/#reading`, JS reads hash on load and shows the correct section.
+
+#### CLAUDE.md: Documentation errors
+- Said blog shows "3 latest" posts - actually 6
+- Claimed Turnstile CAPTCHA was integrated - it was removed in Phase 8
+- Listed Turnstile as an active security feature
+
+**Fix:** Corrected post count, removed all Turnstile references.
+
+### Dev Infrastructure Added
+
+#### wrangler.toml
+Created for local Cloudflare Pages development:
 ```
-Dream the Wilderness/
-├── index.html                 # Main SPA (75KB)
-├── 404.html                   # Error page
-├── CLAUDE.md                  # Architecture guide
-├── DEV_JOURNEY.md             # This file
-├── _headers.txt               # Security & cache headers
-├── _redirects.txt             # URL routing & SEO redirects
+wrangler pages dev . --port 8788
+```
+KV bindings defined (IDs need filling from Cloudflare dashboard). Secrets go in `.dev.vars` (gitignored).
+
+#### .gitignore
+Added `.dev.vars` to prevent local secret file from being committed.
+
+### Standing Improvement Items
+
+1. **External image fragility** - Profile photo, dancing cranes, book cover are on third-party CDNs. Should be downloaded and served from /images/.
+2. **No CAPTCHA** - Turnstile removed in Phase 8. Spam protection is keyword-only. Monitor and revisit if spam becomes an issue.
+3. **About page content** - References fiber arts (archived). Needs content update.
+4. **Contact section image** - Unsplash stock photo doesn't fit the authentic imagery style.
+
+---
+
+## Current State (March 2026)
+
+### Site Map
+```
+dreamthewilderness.com/
+├── home          - Offerings (readings, Re-Rooting) + Current Projects (ecology series)
+├── blog          - 6 latest Substack posts via RSS (cached 10min in KV)
+├── book a reading - Birth chart reading session info + contact CTA
+├── about         - Full bio + photo
+└── contact       - Form (email via Resend, 90-day KV backup)
+```
+
+### File Structure
+```
+DTWCloudflareHost/
+├── index.html               # Main SPA with all content + embedded CSS
+├── 404.html
+├── wrangler.toml            # Local Pages dev config (NEW)
+├── CLAUDE.md                # Architecture guide for AI-assisted dev
+├── DEV_JOURNEY.md           # This file
+├── _headers.txt             # Security + cache headers
+├── _redirects.txt           # URL routing (all 301s now)
 │
 ├── js/
-│   ├── main.js                # Navigation (85 lines)
-│   ├── blog-loader.js         # Blog fetching (80 lines)
-│   └── contact-form.js        # Form handling (120 lines)
+│   ├── main.js              # Navigation, hash routing, mobile menu
+│   ├── blog-loader.js       # Substack RSS fetch, render, retry (event delegation)
+│   └── contact-form.js      # Validation, submission, error handling
 │
 ├── functions/
-│   ├── contact.js             # Email handler
-│   └── api/
-│       └── blog.js            # RSS parser + caching
+│   ├── contact.js           # Email via Resend, KV storage, spam filter
+│   └── api/blog.js          # RSS proxy, XML parser, KV cache (10min TTL)
 │
 ├── images/
-│   ├── astrology-landing.jpg
-│   ├── fiber-arts-landing.jpg
-│   └── business-card.jpg
+│   ├── astrology-landing.jpg  # Birth chart readings card
+│   ├── fiber-arts-landing.jpg # Archived (not displayed)
+│   └── business-card.jpg      # Currently unused
 │
 └── downloads/
     └── quick-guide-traditional-astrology.pdf
 ```
 
----
+### Deployment
+- Git push to main -> Cloudflare Pages auto-deploys
+- No build step, no npm, no pipeline
+- Functions deploy automatically alongside static files
 
-## Phase 9: December 2025 Redesign - Courtney's Creative Direction
-
-**Status:** ✅ Complete
-**Timeline:** December 15, 2025
-**Focus:** Complete site transformation aligned with Courtney's personal brand
-
-### Session Overview
-Major redesign based on creative feedback from Courtney Chandrea. Removed dual-portal concept, simplified homepage structure, transformed visual design from dark to light theme, and aligned all content with Courtney's Substack brand presence.
-
-### Key Accomplishments
-
-#### Content Transformation
-**Removed Dual-Portal Concept**
-- Old structure: Separate Celestial Guidance and Sacred Craft landing pages
-- New structure: Single simplified homepage with offerings and projects
-- Fiber arts content archived (kept in repo as HTML comments, not displayed)
-
-**New Homepage Structure**
-- **Offerings Section:**
-  - Birth chart readings (60-minute sliding-scale sessions)
-  - Re-Rooting: A Landmark Map to the Wild Soul ebook
-- **Current Projects:**
-  - The ecology of the zodiac essay series
-- **About Band:**
-  - Courtney's photo with short bio
-  - Link to full about page
-
-**Navigation Overhaul**
-- Old: Home, Celestial Guidance, Sacred Craft, Blog, About, Contact
-- New: home, blog, book a reading, about, contact
-- All lowercase (matching Substack brand)
-- "Book a Reading" section: Simplified explanation page linking to Calendly
-
-**About Page Update**
-- Full biography from Courtney's Substack
-- Professional background (Nightlight School certifications)
-- Notable projects (Re-Rooting, fiber patterns)
-- Links to Substack and Ravelry
-- All in lowercase style except proper nouns
-
-#### Visual Design Transformation
-
-**Color Scheme Inversion**
-```
-Before (Dark Theme):
-- Background: #3d2914 → #1a0f08 (dark brown gradient)
-- Text: #e8dcc0 (light beige)
-- Accents: #d4c4a8 (tan)
-
-After (Light Theme):
-- Background: #F2F2E3 (light cream)
-- Text: #3d2914 (dark earthy brown)
-- Accents: #8b755d (warm tan)
-```
-
-**Typography Updates**
-- All text converted to lowercase except proper nouns
-- Examples: "home", "blog", "book a reading" vs "Courtney Chandrea", "Re-Rooting"
-- Maintains Georgia serif for mystical aesthetic
-- Improved readability with dark text on light background
-
-**Visual Enhancements Added**
-- Scroll-triggered fade-in animations using Intersection Observer
-- Staggered animation delays for grid items (0.1s, 0.2s, 0.3s)
-- Organic SVG blob shapes with subtle drift animations
-- Enhanced hover effects: lift + shadow increase
-- Parallax background attachment (where supported)
-- Smooth transitions throughout (0.3s cubic-bezier)
-
-#### Assets Integration
-
-**Images Sourced**
-- Courtney's profile photo: Substack CDN (554x554)
-  - Used in about section and homepage band
-- Dancing cranes: Libra ecology essay (2372x1554)
-  - Used for ecology of the zodiac project card
-- Re-Rooting book cover: Barnes & Noble (600x595)
-  - Used for Re-Rooting offering card
-
-**Local Images Repurposed**
-- `astrology-landing.jpg`: Now used for birth chart readings
-- `fiber-arts-landing.jpg`: Archived, not displayed
-
-#### Technical Updates
-
-**SEO & Metadata**
-- Changed structured data from LocalBusiness to Person schema
-- Updated meta tags focusing on Courtney Chandrea
-- Keywords updated: Hellenistic astrology, animist, rewilder, ecology
-- Social sharing images now use Courtney's profile photo
-- Updated Open Graph and Twitter Card tags
-
-**Redirects Configuration**
-- `/astrology` → `/#reading` (301 redirect)
-- `/celestial-guidance` → `/#reading` (301)
-- `/craft` → `/#home` (301 redirect)
-- `/sacred-craft` → `/#home` (301)
-- `/reading` → `/#reading` (200)
-- `/book-a-reading` → `/#reading` (200)
-- Legacy paths all redirect appropriately
-
-**Routing Updates**
-- Generic hash-based routing in `main.js` automatically handles new sections
-- No code changes needed - data-driven navigation
-- Browser history support preserved
-
-### Preserved Functionality
-
-**Backend Unchanged**
-- Contact form with Resend API integration
-- Blog RSS feed with 10-minute KV caching
-- Spam filtering (keyword-based)
-- Field-specific form validation
-- All security measures maintained
-
-**Accessibility Maintained**
-- WCAG 2.1 AA+ compliance
-- Keyboard navigation
-- Screen reader support
-- Semantic HTML structure
-- Focus indicators
-- Skip-to-content link
-
-**Performance Features**
-- Lazy loading on all images
-- Explicit image dimensions
-- Resource preconnect hints
-- Cloudflare CDN caching
-- No build process required
-
-### Implementation Details
-
-**CSS Animation System**
-```css
-/* Scroll-triggered fade-ins */
-.fade-in-element {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
-
-.fade-in-element.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Staggered service cards */
-.service-card:nth-child(1).visible { transition-delay: 0.1s; }
-.service-card:nth-child(2).visible { transition-delay: 0.2s; }
-.service-card:nth-child(3).visible { transition-delay: 0.3s; }
-```
-
-**Organic SVG Shapes**
-- 4 animated blob shapes in earthy tones
-- Subtle drift animations (18-27 second cycles)
-- Fixed positioning, behind all content
-- Very low opacity (0.03) for subtle texture
-- Gaussian blur filter for organic feel
-
-**JavaScript Enhancements**
-```javascript
-// Intersection Observer for scroll animations
-const fadeInObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  },
-  { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-);
-
-// Observe all service cards
-document.querySelectorAll('.service-card').forEach(card => {
-  fadeInObserver.observe(card);
-});
-```
-
-### Commits This Session
-
-1. `4c6c1e8` - Major redesign: Simplified homepage with Courtney's creative direction
-   - Remove dual-portal design
-   - New offerings & projects sections
-   - Archive fiber arts content
-   - Update navigation to lowercase
-   - Transform color scheme to light theme
-   - Add scroll animations and organic shapes
-   - Update SEO metadata
-
-2. `677592c` - Add Re-Rooting book cover from Barnes & Noble
-   - Replace placeholder with actual book cover
-   - Complete visual design
-
-### File Changes
-
-**Modified Files:**
-- `index.html` - Complete content and style transformation
-- `_redirects.txt` - Updated for new navigation structure
-- `CLAUDE.md` - Documentation update
-- `DEV_JOURNEY.md` - This entry
-
-**Preserved Files:**
-- `js/main.js` - Generic routing, no changes needed
-- `js/blog-loader.js` - Unchanged
-- `js/contact-form.js` - Unchanged
-- `functions/contact.js` - Backend unchanged
-- `functions/api/blog.js` - Backend unchanged
-
-### Design Philosophy
-
-**Content Fidelity**
-- Used Courtney's exact words verbatim (1:1 fidelity)
-- No paraphrasing or editorial changes
-- Preserved her lowercase stylistic choice
-- Maintained her poetic rhythm and voice
-
-**Visual Enhancement Approach**
-- Subtle modernization without overshadowing content
-- Animations support content, don't distract
-- Organic shapes evoke wilderness theme
-- Light theme feels more contemporary while keeping earth tones
-- Every enhancement purposeful, not decorative
-
-**Brand Consistency**
-- Aligned with Substack presence
-- Lowercase typography matches her newsletter
-- Colors (#F2F2E3) from her email signature
-- Professional yet mystical aesthetic
-- Personal brand (Courtney) vs. business brand (dual services)
-
-### Statistics
-
-| Metric | Count |
-|--------|-------|
-| Lines of Code Modified | 500+ |
-| Sections Removed | 2 (Astrology, Craft) |
-| Sections Added | 1 (Reading) |
-| CSS Classes Added | 15+ (animations, transitions) |
-| Images Integrated | 3 (profile, cranes, book) |
-| Color Scheme Updates | 25+ properties |
-| Animation Keyframes | 4 |
-| SVG Elements | 4 (organic shapes) |
-| Redirects Updated | 8 |
-| Meta Tags Updated | 12 |
-
-### Lessons Learned
-
-1. **Designer Intent is Sacred**: When working with creative talent, preserve their exact words and vision
-2. **Color Inversion Requires Systematic Approach**: Changed 50+ color values, must be thorough
-3. **Animation Restraint**: Subtle enhancements > flashy effects
-4. **Archived Content Strategy**: Comment out rather than delete (preserves git history + option to restore)
-5. **Brand Alignment**: Personal website should match creator's established voice (Substack)
-
-### Future Considerations
-
-**Content Management**
-- Re-Rooting book cover image needs periodic updates if cover changes
-- Ecology series URL may change as project evolves
-- Profile photo should update if Courtney changes Substack image
-
-**Feature Additions (Optional)**
-- Dark mode toggle (CSS variables make this trivial now)
-- Additional project cards as Courtney creates more content
-- Testimonials section for readings
-- Calendar integration for booking
-
-**Performance**
-- Consider WebP format for local images (browser support now excellent)
-- Could add more sophisticated parallax on hero sections
-- Intersection Observer could trigger more effects
+### What's Next (Courtney's Direction - Session Planned)
+Courtney has been thinking about what the site should do vs. what should just point to Substack. Planning session coming up - likely covers:
+- Content changes or simplification
+- Possible booking integration for readings
+- Any new design direction
+- Clarifying the site's role relative to her Substack presence
 
 ---
 
-**Last Updated:** December 15, 2025
-**Status:** Production Ready ✅
-**Next Phase:** Support mode - respond to Courtney's feedback and feature requests
+*Dream the Wilderness - Courtney Chandrea, writer, animist, and consulting Hellenistic astrologer.*

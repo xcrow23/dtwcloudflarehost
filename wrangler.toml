@@ -1,0 +1,25 @@
+# Dream the Wilderness - Cloudflare Pages local dev config
+# Usage: wrangler pages dev . --port 8788
+# Requires: npm install -g wrangler (or npx wrangler)
+
+name = "dreamthewilderness"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "."
+
+# KV Namespaces - fill in IDs from Cloudflare dashboard
+# Dashboard > Workers & Pages > KV > find the namespace > copy ID
+[[kv_namespaces]]
+binding = "CONTACTS_KV"
+id = "2ef1adba87b749d7ab561f8505104c07"
+preview_id = "2ef1adba87b749d7ab561f8505104c07"
+
+[[kv_namespaces]]
+binding = "BLOG_CACHE"
+id = "813a45421ef1453b9a0976c2384e44f0"
+preview_id = "813a45421ef1453b9a0976c2384e44f0"
+
+# Environment variables for local dev (secrets go in .dev.vars, not here)
+# Create a .dev.vars file (gitignored) with:
+#   RESEND_API_KEY=re_xxxxxxxxxxxx
+#   CONTACT_EMAIL=hello@dreamthewilderness.com
+#   FROM_EMAIL=noreply@dreamthewilderness.com

@@ -42,7 +42,11 @@ export async function onRequestGet(context) {
     }
 
     // Fetch the Substack RSS feed
-    const feedResponse = await fetch(SUBSTACK_FEED_URL);
+    const feedResponse = await fetch(SUBSTACK_FEED_URL, {
+      headers: {
+        'User-Agent': 'DreamTheWildernessBot/1.0 (+https://dreamthewilderness.com)'
+      }
+    });
 
     if (!feedResponse.ok) {
       throw new Error(`Failed to fetch Substack feed: ${feedResponse.statusText}`);
@@ -53,15 +57,16 @@ export async function onRequestGet(context) {
     // Parse RSS XML
     items = parseRssFeed(feedText);
 
-    // Cache the result for 10 minutes (600 seconds)
+    // Cache the result for 6 hours (21600 seconds) - posts publish weekly,
+    // and a longer TTL reduces how often we hit Substack's feed
     if (env.BLOG_CACHE && items.length > 0) {
       try {
         const updatedAt = new Date().toISOString();
         await env.BLOG_CACHE.put(cacheKey, JSON.stringify({
           items: items,
           updatedAt: updatedAt
-        }), { expirationTtl: 600 });
-        console.log('Blog API: Feed cached for 10 minutes');
+        }), { expirationTtl: 21600 });
+        console.log('Blog API: Feed cached for 6 hours');
       } catch (cacheError) {
         console.warn('Blog API: Failed to cache feed:', cacheError.message);
       }

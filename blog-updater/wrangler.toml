@@ -1,0 +1,21 @@
+# Dream the Wilderness - blog cache updater
+# Standalone Worker (separate from the Pages project) whose only job is to
+# refresh the Substack RSS cache in KV on a schedule, so the public-facing
+# /api/blog endpoint on the Pages site never has to call Substack itself.
+#
+# Deploy: npx wrangler deploy -c wrangler.toml   (run from this directory)
+
+name = "dtw-blog-cache-updater"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+# Every 6 hours (00:00, 06:00, 12:00, 18:00 UTC). Substack posts publish
+# weekly, so this is about keeping the cache warm, not about freshness.
+[triggers]
+crons = ["0 */6 * * *"]
+
+# Same KV namespace the Pages Function (functions/api/blog.js) reads from.
+[[kv_namespaces]]
+binding = "BLOG_CACHE"
+id = "813a45421ef1453b9a0976c2384e44f0"
+preview_id = "813a45421ef1453b9a0976c2384e44f0"
